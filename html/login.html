@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPTS - Connexion</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <style>
+        /* Ajustements spécifiques à la page de connexion */
+        .login-layout {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+            /* Permet de centrer verticalement le formulaire */
+            position: relative;
+            padding: 40px 24px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .login-wrapper h1 {
+            margin-bottom: 8px;
+            font-size: 32px;
+        }
+
+        .login-wrapper p {
+            margin-bottom: 32px;
+            color: var(--muted);
+        }
+
+        .login-form {
+            grid-template-columns: 1fr;
+            gap: 0;
+            padding: 32px 24px;
+            text-align: left;
+        }
+
+        .login-form .field {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        /* Supprime les flèches des inputs et force la largeur */
+        .login-form input[type="email"],
+        .login-form input[type="password"] {
+            background-image: none;
+            padding-right: 0;
+            width: 100%;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 24px;
+            padding: 0 4px;
+        }
+
+        .login-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .login-options a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-options a:hover {
+            text-decoration: underline;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .register-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Éléments décoratifs en arrière-plan */
+        .login-decor {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .blob-1 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: #eaf4ff;
+            border-radius: 50%;
+            top: -10%;
+            left: -5%;
+            filter: blur(60px);
+            opacity: 0.7;
+        }
+
+        .blob-2 {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: #e0fbfc;
+            border-radius: 50%;
+            bottom: -5%;
+            right: -5%;
+            filter: blur(50px);
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <header id="header">
+            <div class="brand">
+                <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Accueil</a>
+                <a href="recherche.html">Recherche</a>
+                <a href="apropos.html">À propos</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Se
+                    connecter</a>
+                <a href="register.html" class="btn-primary"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    S’inscrire
+                </a>
+            </div>
+        </header>
+
+        <section class="hero login-layout">
+            <div class="login-decor">
+                <div class="blob-1"></div>
+                <div class="blob-2"></div>
+            </div>
+
+            <div class="login-wrapper">
+                <h1>Bienvenue</h1>
+                <p>Connectez-vous pour accéder à votre espace personnel.</p>
+
+                <form class="search-panel login-form" id="loginForm">
+
+                    <label class="field">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <input id="emailInput" type="email" placeholder="Adresse e-mail" required />
+                    </label>
+
+                    <label class="field" style="margin-bottom: 12px;">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <input id="passwordInput" type="password" placeholder="Mot de passe" required />
+                    </label>
+
+                    <div class="login-options">
+                        <label>
+                            <input type="checkbox" id="rememberMe"> Se souvenir de moi
+                        </label>
+                        <a href="#">Mot de passe oublié ?</a>
+                    </div>
+
+                    <button class="search-btn" type="submit"
+                        style="justify-content: center; width: 100%; border-radius: 8px;">
+                        Se connecter
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" style="margin-left: 8px;">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+
+                    <div class="register-link">
+                        Pas encore de compte ? <a href="register.html">Créer un compte</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="toast" id="toast">Connexion réussie !</div>
+
+    <script>
+        const header = document.getElementById("header");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const form = document.getElementById("loginForm");
+        const toast = document.getElementById("toast");
+
+        // Gestion du menu mobile
+        mobileMenu.addEventListener("click", () => {
+            header.classList.toggle("menu-open");
+            mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
+        });
+
+        // Fonction pour afficher la notification (Toast)
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 2500);
+        }
+
+        // Soumission du formulaire
+        form.addEventListener("submit", (event) => {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            const email = document.getElementById("emailInput").value;
+
+            // Simulation d'une connexion réussie
+            showToast(`Bienvenue ! Connexion en cours...`);
+
+            // Réinitialise le mot de passe (mais garde l'email pour le réalisme)
+            document.getElementById("passwordInput").value = "";
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPTS - Contactez-nous</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <style>
+        /* Ajustements spécifiques à la page contact sans toucher au index.css */
+        .contact-layout {
+            align-items: center;
+        }
+
+        .contact-form {
+            grid-template-columns: 1fr;
+            /* Force l'empilement vertical */
+            gap: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 540px;
+        }
+
+        /* CORRECTION 1 : Annule les 190px de base pour remplir tout le panneau */
+        .contact-form .field {
+            width: 100%;
+        }
+
+        /* CORRECTION 2 : Supprime la flèche de menu déroulant des champs texte normaux */
+        .contact-form input[type="text"],
+        .contact-form input[type="email"] {
+            background-image: none;
+            padding-right: 0;
+        }
+
+        .textarea-field {
+            min-height: 140px;
+            align-items: flex-start;
+            padding-top: 14px;
+        }
+
+        .textarea-field textarea {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            resize: none;
+            font-family: inherit;
+        }
+
+        .info-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            color: #23344f;
+            font-size: 14px;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item svg {
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <header id="header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Ouvrir le menu latéral">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="brand">
+                    <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+                </div>
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Accueil</a>
+                <a href="recherche.html">Recherche</a>
+                <a href="apropos.html">À propos</a>
+                <a href="contact.html" class="active">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Se
+                    connecter</a>
+                <a href="register.html" class="btn-primary"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    S’inscrire
+                </a>
+            </div>
+
+            <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
+        </header>
+
+        <section class="hero contact-layout">
+            <div class="hero-content">
+                <h1>Contactez-nous</h1>
+                <p>
+                    Une question, une suggestion ou un besoin d'assistance ?
+                    Remplissez le formulaire ci-dessous et notre équipe vous répondra dans les plus brefs délais.
+                </p>
+
+                <form class="search-panel contact-form" id="contactForm">
+                    <label class="field">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <input id="nameInput" type="text" placeholder="Votre nom complet" required />
+                    </label>
+
+                    <label class="field">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <input id="emailInput" type="email" placeholder="Votre adresse e-mail" required />
+                    </label>
+
+                    <label class="field">
+                        <select id="subjectInput" required>
+                            <option value="" disabled selected>Sujet de votre message</option>
+                            <option value="support">Support technique / Bug</option>
+                            <option value="partenariat">Devenir partenaire (Professionnel)</option>
+                            <option value="information">Demande d'information générale</option>
+                            <option value="autre">Autre demande</option>
+                        </select>
+                    </label>
+
+                    <label class="field textarea-field">
+                        <textarea id="messageInput" placeholder="Saisissez votre message ici..." required></textarea>
+                    </label>
+
+                    <button class="search-btn" type="submit" style="justify-content: center; width: 100%;">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                        Envoyer le message
+                    </button>
+                </form>
+            </div>
+
+            <div class="hero-content" style="position: relative; z-index: 2;">
+                <h2>Informations de contact</h2>
+                <p style="margin-bottom: 24px;">Vous pouvez également nous joindre directement via nos coordonnées.</p>
+
+                <div class="info-card">
+                    <div class="info-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span><strong>Adresse :</strong> 123 Maison de Santé, 75000 Paris</span>
+                    </div>
+                    <div class="info-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                            </path>
+                        </svg>
+                        <span><strong>Téléphone :</strong> 01 23 45 67 89</span>
+                    </div>
+                    <div class="info-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <span><strong>Email :</strong> contact@cpts.fr</span>
+                    </div>
+                </div>
+
+                <div class="doctor-visual" aria-hidden="true"
+                    style="position: absolute; right: -50px; bottom: -100px; opacity: 0.5; transform: scale(0.7); z-index: -1;">
+                    <div class="blob" style="background: #eaf4ff;"></div>
+                    <span class="plus one">+</span>
+                    <span class="plus two">+</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="toast" id="toast">Message envoyé avec succès !</div>
+
+    <script>
+        const header = document.getElementById("header");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const form = document.getElementById("contactForm");
+        const toast = document.getElementById("toast");
+
+        mobileMenu.addEventListener("click", () => {
+            header.classList.toggle("menu-open");
+            mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 2500);
+        }
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            showToast("Votre message a été envoyé avec succès !");
+            form.reset();
+        });
+    </script>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="app-sidebar" id="appSidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <a href="index.html" class="logo-mark" aria-hidden="true" style="width: 120px; height: 30px;"></a>
+            </div>
+            <button class="close-sidebar" id="closeSidebar">&times;</button>
+        </div>
+
+        <a href="#" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Mon profil
+        </a>
+        <a href="#" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path
+                    d="M20.8 5.6c-1.8-2.1-5-1.9-6.8.1L12 8l-2-2.3C8.2 3.7 5 3.5 3.2 5.6c-1.7 2-1.5 5 .4 6.9L12 21l8.4-8.5c1.9-1.9 2.1-4.9.4-6.9z">
+                </path>
+            </svg>
+            Mes favoris
+        </a>
+        <a href="#" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Mes rendez-vous
+        </a>
+
+        <a href="login.html" class="nav-item logout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Déconnexion
+        </a>
+    </aside>
+
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

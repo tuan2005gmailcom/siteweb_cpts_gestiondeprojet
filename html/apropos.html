@@ -168,6 +168,7 @@
         }
 
         @media (max-width: 900px) {
+
             .about-grid,
             .about-mission {
                 grid-template-columns: 1fr;
@@ -175,6 +176,7 @@
         }
 
         @media (max-width: 760px) {
+
             .about-hero,
             .about-section,
             .about-cta {
@@ -192,8 +194,17 @@
 <body>
     <main class="page">
         <header id="header">
-            <div class="brand">
-                <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Ouvrir le menu latéral">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="brand">
+                    <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+                </div>
             </div>
 
             <nav aria-label="Navigation principale">
@@ -284,7 +295,8 @@
                         <div>
                             <h4>Afficher les professionnels adaptés</h4>
                             <p>
-                                Le site filtre les résultats selon les informations enregistrées dans la base de données.
+                                Le site filtre les résultats selon les informations enregistrées dans la base de
+                                données.
                             </p>
                         </div>
                     </div>
@@ -294,7 +306,8 @@
                         <div>
                             <h4>Faciliter la prise de contact</h4>
                             <p>
-                                L’utilisateur peut consulter les informations du professionnel et poursuivre son parcours.
+                                L’utilisateur peut consulter les informations du professionnel et poursuivre son
+                                parcours.
                             </p>
                         </div>
                     </div>

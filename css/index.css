@@ -996,6 +996,42 @@ button {
     background: #f1f5f9;
 }
 
+.checkbox-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    flex: 0 0 18px;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.checkbox-item span {
+    flex: 1;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
 .terms-line {
     display: flex;
     gap: 10px;

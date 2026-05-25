@@ -232,7 +232,7 @@
             });
         });
 
-        fetch("getSpecialities.php")
+        fetch("../php/getSpecialities.php")
             .then(response => response.json())
             .then(specialities => {
                 specialities.forEach(speciality => {
@@ -256,7 +256,7 @@
                 return;
             }
 
-            fetch(`getPathologies.php?speciality_id=${specialityId}`)
+            fetch(`../php/getPathologies.php?speciality_id=${specialityId}`)
                 .then(response => response.json())
                 .then(pathologies => {
                     pathologyCheckboxes.innerHTML = "";

@@ -630,10 +630,6 @@ button {
         padding: 56px 24px 24px;
     }
 
-    .doctor-card {
-        height: 390px;
-    }
-
     .features {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -659,6 +655,41 @@ button {
 
     .search-btn {
         justify-content: center;
+    }
+
+    .doctor-visual {
+        min-height: 360px;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .doctor-card {
+        height: 470px;
+        transform: scale(0.78);
+        transform-origin: center bottom;
+    }
+
+    .blob {
+        width: 360px;
+        height: 360px;
+        right: 50%;
+        transform: translateX(50%);
+        bottom: 20px;
+    }
+
+    .plus.one {
+        top: 30px;
+        left: 40px;
+    }
+
+    .plus.two {
+        right: 40px;
+        top: 70px;
+    }
+
+    .plus.three {
+        right: 120px;
+        top: 150px;
     }
 
     .features {

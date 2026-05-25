@@ -173,7 +173,8 @@ button {
 .hero-content {
     position: relative;
     z-index: 2;
-    max-width: 820px; /* Increased from 660px */
+    max-width: 820px;
+    /* Increased from 660px */
 }
 
 .hero h1 {
@@ -194,7 +195,7 @@ button {
 
 .search-panel {
     display: grid;
-    grid-template-columns: 1.4fr 1.1fr 1.1fr auto; 
+    grid-template-columns: 1.4fr 1.1fr 1.1fr auto;
     gap: 10px;
     align-items: center;
     width: min(1000px, 100%);
@@ -240,7 +241,7 @@ button {
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    
+
     /* Custom Dropdown Arrow */
     appearance: none;
     -webkit-appearance: none;
@@ -249,7 +250,8 @@ button {
     background-repeat: no-repeat;
     background-position: right center;
     background-size: 16px;
-    padding-right: 22px; /* Ensures text doesn't overlap the new arrow */
+    padding-right: 22px;
+    /* Ensures text doesn't overlap the new arrow */
 }
 
 .field select::-ms-expand {
@@ -257,7 +259,7 @@ button {
 }
 
 .field input::-webkit-calendar-picker-indicator {
-    opacity: 0; 
+    opacity: 0;
     cursor: pointer;
 }
 
@@ -591,19 +593,32 @@ button {
         display: block;
     }
 
-    header.menu-open nav {
+    header {
+        position: relative;
+    }
+
+    header.menu-open nav,
+    header.menu-open .header-actions {
         position: absolute;
-        top: 96px;
         left: 32px;
         right: 32px;
         z-index: 20;
         display: grid;
-        gap: 18px;
-        padding: 24px;
+        gap: 14px;
+        padding: 20px;
         background: white;
         border: 1px solid var(--border);
-        border-radius: 16px;
         box-shadow: var(--shadow);
+    }
+
+    header.menu-open nav {
+        top: 96px;
+        border-radius: 16px 16px 0 0;
+    }
+
+    header.menu-open .header-actions {
+        top: 285px;
+        border-radius: 0 0 16px 16px;
     }
 
     header.menu-open nav a.active::after {
@@ -681,7 +696,8 @@ button {
 .app-sidebar {
     position: fixed;
     top: 0;
-    left: -320px; /* Caché par défaut en dehors de l'écran */
+    left: -320px;
+    /* Caché par défaut en dehors de l'écran */
     width: 280px;
     height: 100vh;
     background: var(--white);
@@ -695,7 +711,8 @@ button {
 }
 
 .app-sidebar.open {
-    left: 0; /* Apparaît à l'écran */
+    left: 0;
+    /* Apparaît à l'écran */
 }
 
 /* --- OVERLAY (FOND SOMBRE QUAND LE MENU EST OUVERT) --- */
@@ -780,37 +797,38 @@ button {
 }
 
 .custom-select {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 .dropdown-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
 
-  max-height: 180px; /* about 5 items */
-  overflow-y: auto;
+    max-height: 180px;
+    /* about 5 items */
+    overflow-y: auto;
 
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  margin: 6px 0 0;
-  padding: 0;
-  list-style: none;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
 
-  z-index: 1000;
-  display: none;
+    z-index: 1000;
+    display: none;
 }
 
 .dropdown-list li {
-  padding: 10px 14px;
-  cursor: pointer;
+    padding: 10px 14px;
+    cursor: pointer;
 }
 
 .dropdown-list li:hover {
-  background: #f2f2f2;
+    background: #f2f2f2;
 }
 
 .register-section {

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPTS - À propos</title>
+    <link rel="stylesheet" href="../css/index.css">
+
+    <style>
+        .about-hero {
+            padding: 70px 42px;
+            background: linear-gradient(110deg, #f4faff 0%, #ffffff 54%, #edf7ff 100%);
+        }
+
+        .about-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .about-badge {
+            display: inline-flex;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+        .about-hero h1 {
+            font-size: clamp(36px, 5vw, 56px);
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 22px;
+            letter-spacing: -1.5px;
+        }
+
+        .about-hero p {
+            max-width: 760px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .about-section {
+            padding: 54px 42px;
+            background: var(--white);
+            border-top: 1px solid #edf2f8;
+        }
+
+        .about-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .about-card {
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: #ffffff;
+            box-shadow: 0 14px 30px rgba(18, 76, 145, 0.08);
+        }
+
+        .about-card h3 {
+            color: #113263;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .about-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .about-mission {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 36px;
+            align-items: center;
+        }
+
+        .mission-box {
+            padding: 32px;
+            border-radius: 24px;
+            background: var(--primary-light);
+            border: 1px solid #d7eaff;
+        }
+
+        .mission-box h2 {
+            font-size: 30px;
+            color: var(--primary-dark);
+            margin-bottom: 14px;
+        }
+
+        .mission-box p {
+            color: #31476b;
+            line-height: 1.8;
+        }
+
+        .mission-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .mission-item {
+            display: flex;
+            gap: 14px;
+            padding: 18px;
+            border-radius: 16px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+        }
+
+        .mission-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            background: var(--primary);
+            color: white;
+            font-weight: 900;
+        }
+
+        .mission-item h4 {
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .mission-item p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .about-cta {
+            padding: 54px 42px;
+            text-align: center;
+            background: #f8fbff;
+            border-top: 1px solid #edf2f8;
+        }
+
+        .about-cta h2 {
+            font-size: 32px;
+            margin-bottom: 14px;
+            color: var(--text);
+        }
+
+        .about-cta p {
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .about-cta-actions {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 900px) {
+            .about-grid,
+            .about-mission {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .about-hero,
+            .about-section,
+            .about-cta {
+                padding: 42px 24px;
+            }
+
+            .about-card,
+            .mission-box {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <header id="header">
+            <div class="brand">
+                <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Accueil</a>
+                <a href="recherche.html">Recherche</a>
+                <a href="apropos.html" class="active">À propos</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    Se connecter
+                </a>
+                <a href="register.html" class="btn-primary"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    S’inscrire
+                </a>
+            </div>
+
+            <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
+        </header>
+
+        <section class="about-hero">
+            <div class="about-container">
+                <span class="about-badge">À propos de CPTS</span>
+                <h1>Faciliter l’accès aux professionnels de santé de votre territoire</h1>
+                <p>
+                    Notre plateforme CPTS aide les patients à trouver rapidement un professionnel de santé
+                    adapté à leurs besoins. Grâce à une recherche par nom, compétence ou pathologie,
+                    l’utilisateur peut accéder plus facilement aux informations utiles et préparer sa prise de contact.
+                </p>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="about-grid">
+                <article class="about-card">
+                    <h3>Recherche simplifiée</h3>
+                    <p>
+                        Les patients peuvent rechercher un professionnel par spécialité, pathologie ou nom.
+                        Le but est de rendre l’accès aux soins plus rapide et plus clair.
+                    </p>
+                </article>
+
+                <article class="about-card">
+                    <h3>Profils professionnels</h3>
+                    <p>
+                        Chaque professionnel peut présenter ses compétences, les pathologies prises en charge,
+                        ses coordonnées et les informations essentielles pour les patients.
+                    </p>
+                </article>
+
+                <article class="about-card">
+                    <h3>Organisation locale</h3>
+                    <p>
+                        La plateforme permet de mieux organiser les informations de santé sur un territoire
+                        et d’orienter les patients vers les bons interlocuteurs.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="about-mission">
+                <div class="mission-box">
+                    <h2>Notre mission</h2>
+                    <p>
+                        Rapprocher les patients et les professionnels de santé grâce à un outil simple,
+                        clair et accessible. Le site permet de centraliser les informations, faciliter
+                        la recherche et améliorer l’orientation des patients.
+                    </p>
+                </div>
+
+                <div class="mission-list">
+                    <div class="mission-item">
+                        <div class="mission-icon">1</div>
+                        <div>
+                            <h4>Identifier le besoin</h4>
+                            <p>
+                                Le patient indique une compétence, une pathologie ou un nom de professionnel.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mission-item">
+                        <div class="mission-icon">2</div>
+                        <div>
+                            <h4>Afficher les professionnels adaptés</h4>
+                            <p>
+                                Le site filtre les résultats selon les informations enregistrées dans la base de données.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mission-item">
+                        <div class="mission-icon">3</div>
+                        <div>
+                            <h4>Faciliter la prise de contact</h4>
+                            <p>
+                                L’utilisateur peut consulter les informations du professionnel et poursuivre son parcours.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-cta">
+            <h2>Vous êtes patient ou professionnel de santé ?</h2>
+            <p>
+                Créez un compte pour accéder aux fonctionnalités de la plateforme.
+            </p>
+
+            <div class="about-cta-actions">
+                <a href="register.html" class="btn-primary"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    Créer un compte
+                </a>
+
+                <a href="recherche.html" class="btn-outline"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    Rechercher un professionnel
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const header = document.getElementById("header");
+        const mobileMenu = document.getElementById("mobileMenu");
+
+        if (mobileMenu) {
+            mobileMenu.addEventListener("click", () => {
+                header.classList.toggle("menu-open");
+                mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
+            });
+        }
+    </script>
+</body>
+
+</html>

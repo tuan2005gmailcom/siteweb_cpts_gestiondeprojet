@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPTS - Mon Profil</title>
+    <link rel="stylesheet" href="../css/index.css" />
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 32px auto;
+            padding: 24px 32px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+        .profile-title {
+            font-size: 28px;
+            margin-bottom: 24px;
+        }
+        .profile-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .profile-form .full-width {
+            grid-column: span 2;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: var(--text);
+        }
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f8fafc;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+            outline: none;
+        }
+        .save-btn {
+            grid-column: span 2;
+            padding: 14px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .save-btn:hover {
+            background: var(--primary-dark);
+        }
+        .restricted-info {
+            background: #fff9e6;
+            border: 1px solid #ffe28c;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin: 16px 0;
+        }
+        .error-msg {
+            color: #d6324b;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 600px) {
+            .profile-form {
+                grid-template-columns: 1fr;
+            }
+            .profile-form .full-width {
+                grid-column: span 1;
+            }
+            .save-btn {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header id="header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Ouvrir le menu latéral">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="brand">
+                    <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+                </div>
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Accueil</a>
+                <a href="recherche.html">Recherche</a>
+                <a href="apropos.html">À propos</a>
+                <a href="actualites.html">Actualités</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline">Se connecter</a>
+                <a href="register.html" class="btn-primary">S’inscrire</a>
+            </div>
+
+            <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
+        </header>
+
+        <div class="profile-container">
+            <h1 class="profile-title">👤 Mon Profil</h1>
+            <div id="errorMsg" class="error-msg" style="display:none;"></div>
+
+            <form id="profileForm" class="profile-form">
+                <!-- Partie commune -->
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="username" name="username" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" name="email" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="tel" id="phone" name="phone" />
+                </div>
+
+                <div class="form-group">
+                    <label>Adresse</label>
+                    <input type="text" id="address" name="address" />
+                </div>
+
+                <div class="form-group">
+                    <label>Ville</label>
+                    <input type="text" id="city" name="city" />
+                </div>
+
+                <div class="form-group">
+                    <label>Code postal</label>
+                    <input type="text" id="postal_code" name="postal_code" />
+                </div>
+
+                <!-- Champs spécifiques professionnel (affichés si rôle = medecin ou autre pro) -->
+                <div id="professionalFields" style="display:none;" class="full-width">
+                    <div class="form-group full-width">
+                        <label>Numéro professionnel (RPPS/ADELI)</label>
+                        <input type="text" id="professional_number" name="professional_number" />
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Description professionnelle</label>
+                        <textarea id="description" name="description" rows="4"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Compétences (séparées par des virgules)</label>
+                        <input type="text" id="competences" name="competences" placeholder="Ex: Cardiologie, Pédiatrie" />
+                    </div>
+                </div>
+
+                <!-- Options de restriction pour les médecins -->
+                <div id="restrictionBox" class="full-width" style="display:none;">
+                    <div class="restricted-info">
+                        <label>
+                            <input type="checkbox" id="restreindre_infos" name="restreindre_infos" />
+                            Restreindre l'affichage de mon téléphone et email personnels aux médecins uniquement
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="save-btn">💾 Enregistrer les modifications</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="app-sidebar" id="appSidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <a href="index.html" class="logo-mark" aria-hidden="true" style="width: 120px; height: 30px;"></a>
+            </div>
+            <button class="close-sidebar" id="closeSidebar">&times;</button>
+        </div>
+        <a href="profil.html" class="nav-item active">Mon profil</a>
+        <a href="favoris.html" class="nav-item">Mes favoris</a>
+        <a href="#" class="nav-item">Mes rendez-vous</a>
+        <a href="login.html" class="nav-item logout">Déconnexion</a>
+    </aside>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Gestion menu mobile & sidebar (standard)
+        const header = document.getElementById("header");
+        const mobileMenu = document.getElementById("mobileMenu");
+        mobileMenu?.addEventListener("click", () => {
+            header.classList.toggle("menu-open");
+            mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
+        });
+
+        const sidebarToggle = document.getElementById("sidebarToggle");
+        const appSidebar = document.getElementById("appSidebar");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        const closeSidebarBtn = document.getElementById("closeSidebar");
+
+        function toggleSidebar() {
+            appSidebar.classList.toggle("open");
+            sidebarOverlay.classList.toggle("open");
+        }
+        sidebarToggle?.addEventListener("click", toggleSidebar);
+        closeSidebarBtn?.addEventListener("click", toggleSidebar);
+        sidebarOverlay?.addEventListener("click", toggleSidebar);
+
+        // Chargement des données du profil
+        async function loadProfile() {
+            try {
+                const response = await fetch("../php/get_profile.php");
+                if (!response.ok) throw new Error("Non autorisé");
+                const data = await response.json();
+
+                if (data.error) {
+                    window.location.href = "login.html"; // redirection si non connecté
+                    return;
+                }
+
+                document.getElementById("username").value = data.username || "";
+                document.getElementById("email").value = data.email || "";
+                document.getElementById("phone").value = data.phone || "";
+                document.getElementById("address").value = data.address || "";
+                document.getElementById("city").value = data.city || "";
+                document.getElementById("postal_code").value = data.postal_code || "";
+
+                // Affichage conditionnel des champs professionnels
+                if (data.role === "medecin" || data.role === "contributeur") {
+                    document.getElementById("professionalFields").style.display = "block";
+                    document.getElementById("professional_number").value = data.professional_number || "";
+                    document.getElementById("description").value = data.description || "";
+                    document.getElementById("competences").value = data.competences ? data.competences.join(", ") : "";
+                }
+
+                // Case à cocher restriction (pour les médecins)
+                if (data.role === "medecin") {
+                    document.getElementById("restrictionBox").style.display = "block";
+                    document.getElementById("restreindre_infos").checked = data.restreindre_infos == 1;
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById("errorMsg").style.display = "block";
+                document.getElementById("errorMsg").textContent = "Erreur de chargement du profil.";
+            }
+        }
+
+        // Soumission du formulaire
+        document.getElementById("profileForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            // Ajouter les compétences sous forme de tableau
+            const competencesStr = formData.get("competences");
+            if (competencesStr) {
+                formData.delete("competences");
+                formData.append("competences", competencesStr);
+            }
+
+            try {
+                const response = await fetch("../php/update_profile.php", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert("Profil mis à jour avec succès !");
+                } else {
+                    alert("Erreur : " + (result.message || "Veuillez réessayer."));
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Erreur réseau.");
+            }
+        });
+
+        loadProfile();
+    </script>
+</body>
+</html>

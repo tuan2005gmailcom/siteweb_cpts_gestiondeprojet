@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fiche professionnel - CPTS</title>
+    <link rel="stylesheet" href="../css/index.css" />
+    <style>
+        .fiche-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 32px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+        .fiche-header {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .avatar-large {
+            width: 100px;
+            height: 100px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .fiche-title h1 {
+            margin: 0 0 6px;
+            font-size: 32px;
+        }
+        .fiche-title p {
+            margin: 0;
+            color: var(--muted);
+        }
+        .fiche-section {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .fiche-section:last-child { border-bottom: none; }
+        .fiche-section h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #eef3f9;
+            border-radius: 999px;
+            margin: 4px;
+            font-size: 13px;
+        }
+        .btn-favoris, .btn-feedback, .btn-print {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--white);
+            margin-right: 10px;
+        }
+        .btn-favoris.active { background: #fff0f0; color: #d6324b; }
+        .feedback-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        .feedback-modal.open { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+        }
+        @media print {
+            header, .btn-favoris, .btn-feedback, .btn-print, .sidebar-overlay, .app-sidebar {
+                display: none !important;
+            }
+            .fiche-container { box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header id="header">
+            <!-- menu identique aux autres pages, ajout du toggle sidebar -->
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="brand">
+                    <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+                </div>
+            </div>
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Accueil</a>
+                <a href="recherche.html" class="active">Recherche</a>
+                <a href="apropos.html">À propos</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline">Se connecter</a>
+                <a href="register.html" class="btn-primary">S’inscrire</a>
+            </div>
+            <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
+        </header>
+
+        <div class="fiche-container" id="ficheContainer">
+            Chargement...
+        </div>
+    </main>
+
+    <!-- Modal feedback -->
+    <div class="feedback-modal" id="feedbackModal">
+        <div class="modal-content">
+            <h2>Signaler une information</h2>
+            <form id="feedbackForm">
+                <label>Type de signalement
+                    <select id="feedbackType" required>
+                        <option value="">-- Choisir --</option>
+                        <option value="obsolète">Information obsolète</option>
+                        <option value="manquant">Thème non traité</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </label>
+                <label>Message
+                    <textarea id="feedbackMsg" rows="4" required></textarea>
+                </label>
+                <button type="submit" class="btn-primary">Envoyer</button>
+                <button type="button" id="closeFeedbackModal" class="btn-outline">Annuler</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="app-sidebar" id="appSidebar">
+        <!-- ... idem autres pages ... -->
+    </aside>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Récupération de l'ID depuis l'URL
+        const params = new URLSearchParams(window.location.search);
+        const professionalId = params.get('id');
+
+        if (!professionalId) {
+            document.getElementById('ficheContainer').innerHTML = "<p>Aucun professionnel spécifié.</p>";
+        } else {
+            chargerFiche(professionalId);
+        }
+
+        async function chargerFiche(id) {
+            try {
+                const response = await fetch(`../php/get_professional.php?id=${id}`);
+                if (!response.ok) throw new Error("Erreur réseau");
+                const data = await response.json();
+                if (data.error) {
+                    document.getElementById('ficheContainer').innerHTML = `<p>${data.error}</p>`;
+                    return;
+                }
+                afficherFiche(data);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('ficheContainer').innerHTML = "<p>Erreur lors du chargement.</p>";
+            }
+        }
+
+        function afficherFiche(data) {
+            const pro = data.professionnel;
+            const initiales = pro.username.charAt(0).toUpperCase();
+
+            // Restriction des infos personnelles
+            let phoneDisplay = pro.phone || "Non renseigné";
+            let emailDisplay = pro.email || "Non renseigné";
+            let portableDisplay = "";
+            let emailPersoDisplay = "";
+
+            if (pro.portable_perso && (!pro.restreindre_infos || data.is_medecin)) {
+                portableDisplay = `<p>📱 Portable personnel : ${pro.portable_perso}</p>`;
+            }
+            if (pro.email_perso && (!pro.restreindre_infos || data.is_medecin)) {
+                emailPersoDisplay = `<p>📧 Email personnel : ${pro.email_perso}</p>`;
+            }
+
+            let html = `
+                <div class="fiche-header">
+                    <div class="avatar-large">${initiales}</div>
+                    <div class="fiche-title">
+                        <h1>${pro.username}</h1>
+                        <p>${pro.job_title || "Professionnel de santé"}</p>
+                        <p>${pro.address} ${pro.city} ${pro.postal_code}</p>
+                    </div>
+                </div>
+
+                <div class="fiche-section">
+                    <h2>Coordonnées</h2>
+                    <div class="info-grid">
+                        <p>📞 Téléphone pro : ${phoneDisplay}</p>
+                        <p>✉️ Email pro : ${emailDisplay}</p>
+                        ${portableDisplay}
+                        ${emailPersoDisplay}
+                    </div>
+                </div>
+
+                <div class="fiche-section">
+                    <h2>Compétences</h2>
+                    <div>${data.competences.map(c => `<span class="tag">${c.name}</span>`).join(' ') || "Aucune"}</div>
+                </div>
+
+                <div class="fiche-section">
+                    <h2>Pathologies associées</h2>
+                    <div>${data.pathologies.map(p => `<span class="tag">${p.name}</span>`).join(' ') || "Aucune"}</div>
+                </div>
+
+                <div class="fiche-section">
+                    <h2>Liens utiles</h2>
+                    <ul>
+                        ${data.liens_utiles.map(l => `<li><a href="${l.url}" target="_blank">${l.titre}</a> (${l.type})</li>`).join('') || "<li>Aucun lien</li>"}
+                    </ul>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button class="btn-favoris" id="btnFavoris" data-id="${pro.id}">⭐ Ajouter aux favoris</button>
+                    <button class="btn-feedback" id="btnFeedback">⚠️ Signaler une info obsolète</button>
+                    <button class="btn-print" onclick="window.print()">🖨️ Imprimer</button>
+                </div>
+            `;
+
+            document.getElementById('ficheContainer').innerHTML = html;
+
+            // Gestion des favoris (vérifier si déjà en favori – simplifié)
+            const btnFav = document.getElementById('btnFavoris');
+            btnFav.addEventListener('click', () => {
+                fetch(`../php/toggle_favoris.php?professional_id=${pro.id}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        btnFav.classList.toggle('active', res.is_favorite);
+                        btnFav.textContent = res.is_favorite ? '❤️ Retirer des favoris' : '⭐ Ajouter aux favoris';
+                    });
+            });
+
+            // Feedback modal
+            const feedbackBtn = document.getElementById('btnFeedback');
+            const modal = document.getElementById('feedbackModal');
+            feedbackBtn.addEventListener('click', () => modal.classList.add('open'));
+            document.getElementById('closeFeedbackModal').addEventListener('click', () => modal.classList.remove('open'));
+            document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const type = document.getElementById('feedbackType').value;
+                const msg = document.getElementById('feedbackMsg').value;
+                fetch('../php/submit_feedback.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ professional_id: pro.id, type, message: msg })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    alert(res.message || "Feedback envoyé !");
+                    modal.classList.remove('open');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

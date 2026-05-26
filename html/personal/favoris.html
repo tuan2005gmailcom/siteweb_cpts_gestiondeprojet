@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPTS - Mes Favoris</title>
+    <link rel="stylesheet" href="../css/index.css" />
+    <style>
+        /* Mise en page similaire aux résultats de recherche */
+        .favoris-container {
+            max-width: 900px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+        .favoris-title {
+            font-size: 32px;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+        .favoris-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .favori-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 16px 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .favori-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
+        .favori-avatar {
+            width: 64px;
+            height: 64px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .favori-info {
+            flex: 1;
+        }
+        .favori-info h3 {
+            margin: 0 0 4px;
+            color: var(--text);
+        }
+        .favori-info p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .favori-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-remove {
+            background: #fff0f0;
+            color: #d6324b;
+            border: 1px solid #fcc;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        .btn-remove:hover {
+            background: #fdd;
+        }
+        .btn-see {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid #abc8ed;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <!-- En-tête standard -->
+        <header id="header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Ouvrir le menu latéral">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="brand">
+                    <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+                </div>
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Accueil</a>
+                <a href="recherche.html">Recherche</a>
+                <a href="apropos.html">À propos</a>
+                <a href="actualites.html">Actualités</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline">Se connecter</a>
+                <a href="register.html" class="btn-primary">S’inscrire</a>
+            </div>
+
+            <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
+        </header>
+
+        <!-- Contenu principal -->
+        <div class="favoris-container">
+            <h1 class="favoris-title">⭐ Mes professionnels favoris</h1>
+            <div id="favorisList" class="favoris-list">
+                <!-- Rempli dynamiquement par JS -->
+                <p class="empty-message">Chargement...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="app-sidebar" id="appSidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <a href="index.html" class="logo-mark" aria-hidden="true" style="width: 120px; height: 30px;"></a>
+            </div>
+            <button class="close-sidebar" id="closeSidebar">&times;</button>
+        </div>
+        <a href="#" class="nav-item">Mon profil</a>
+        <a href="favoris.html" class="nav-item active">Mes favoris</a>
+        <a href="#" class="nav-item">Mes rendez-vous</a>
+        <a href="login.html" class="nav-item logout">Déconnexion</a>
+    </aside>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // ---- Menu mobile & sidebar (identique aux autres pages) ----
+        const header = document.getElementById("header");
+        const mobileMenu = document.getElementById("mobileMenu");
+        mobileMenu?.addEventListener("click", () => {
+            header.classList.toggle("menu-open");
+            mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
+        });
+
+        const sidebarToggle = document.getElementById("sidebarToggle");
+        const appSidebar = document.getElementById("appSidebar");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        const closeSidebarBtn = document.getElementById("closeSidebar");
+
+        function toggleSidebar() {
+            appSidebar.classList.toggle("open");
+            sidebarOverlay.classList.toggle("open");
+        }
+        sidebarToggle?.addEventListener("click", toggleSidebar);
+        closeSidebarBtn?.addEventListener("click", toggleSidebar);
+        sidebarOverlay?.addEventListener("click", toggleSidebar);
+
+        // ---- Chargement des favoris ----
+        async function chargerFavoris() {
+            const container = document.getElementById("favorisList");
+            try {
+                const response = await fetch("../php/get_favoris.php");
+                if (!response.ok) throw new Error("Erreur réseau");
+                const data = await response.json();
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<p class="empty-message">Aucun professionnel dans vos favoris.</p>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+                data.forEach(pro => {
+                    const card = document.createElement("div");
+                    card.className = "favori-card";
+                    card.innerHTML = `
+                        <div class="favori-avatar">${pro.initiales}</div>
+                        <div class="favori-info">
+                            <h3>${pro.name}</h3>
+                            <p>${pro.job_title || "Professionnel de santé"}</p>
+                            <p>${pro.address || ""} ${pro.city || ""}</p>
+                        </div>
+                        <div class="favori-actions">
+                            <button class="btn-remove" data-id="${pro.id}">🗑️ Retirer</button>
+                            <a href="fiche.html?id=${pro.id}" class="btn-see">Voir la fiche</a>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // Gestion du retrait d'un favori
+                document.querySelectorAll(".btn-remove").forEach(btn => {
+                    btn.addEventListener("click", async (e) => {
+                        e.stopPropagation(); // pour ne pas déclencher le clic sur la carte
+                        const id = btn.getAttribute("data-id");
+                        await fetch(`../php/toggle_favoris.php?professional_id=${id}`);
+                        // Recharger la liste
+                        chargerFavoris();
+                    });
+                });
+
+            } catch (error) {
+                container.innerHTML = `<p class="empty-message">Erreur lors du chargement des favoris.</p>`;
+                console.error(error);
+            }
+        }
+
+        chargerFavoris();
+    </script>
+</body>
+</html>

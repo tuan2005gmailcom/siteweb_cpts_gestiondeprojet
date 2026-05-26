@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPTS - Résultats de recherche</title>
+    <link rel="stylesheet" href="../css/index.css" />
+    <!-- Leaflet CSS pour la carte -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* Styles spécifiques à la page de résultats */
+        .search-header {
+            padding: 24px 42px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+        .results-layout {
+            display: flex;
+            min-height: 70vh;
+        }
+        .results-list {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+        .results-map {
+            width: 45%;
+            min-height: 500px;
+            border-left: 1px solid var(--border);
+        }
+        .result-card {
+            display: flex;
+            gap: 18px;
+            padding: 18px;
+            margin-bottom: 16px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            align-items: center;
+        }
+        .result-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        .result-avatar {
+            width: 64px;
+            height: 64px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .result-info h3 {
+            margin: 0 0 4px;
+            color: var(--text);
+        }
+        .result-info p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .result-distance {
+            margin-left: auto;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+        .no-results {
+            text-align: center;
+            padding: 48px;
+            color: var(--muted);
+        }
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .view-btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        @media (max-width: 900px) {
+            .results-layout {
+                flex-direction: column;
+            }
+            .results-map {
+                width: 100%;
+                height: 300px;
+                border-left: none;
+                border-top: 1px solid var(--border);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <!-- En-tête (identique aux autres pages) -->
+        <header id="header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Ouvrir le menu latéral">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="brand">
+                    <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+                </div>
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <a href="index.html">Accueil</a>
+                <a href="recherche.html" class="active">Recherche</a>
+                <a href="apropos.html">À propos</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline">Se connecter</a>
+                <a href="register.html" class="btn-primary">S’inscrire</a>
+            </div>
+
+            <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
+        </header>
+
+        <!-- Barre de recherche compacte -->
+        <div class="search-header">
+            <form class="search-panel" id="searchForm" autocomplete="off">
+                <label class="field">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="M20 20l-3.5-3.5"></path>
+                    </svg>
+                    <input id="nameInput" type="text" placeholder="Nom du professionnel" />
+                </label>
+
+                <label class="field">
+                    <div class="custom-select">
+                        <input id="skillInput" type="text" placeholder="Compétence" autocomplete="off" />
+                        <ul id="skillsList" class="dropdown-list"></ul>
+                    </div>
+                </label>
+
+                <label class="field">
+                    <div class="custom-select">
+                        <input id="pathologyInput" type="text" placeholder="Pathologie" autocomplete="off" />
+                        <ul id="pathologyList" class="dropdown-list"></ul>
+                    </div>
+                </label>
+
+                <button class="search-btn" type="submit">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="M20 20l-3.5-3.5"></path>
+                    </svg>
+                    Rechercher
+                </button>
+            </form>
+        </div>
+
+        <!-- Résultats -->
+        <div class="view-toggle" style="padding: 0 24px; margin-top: 16px;">
+            <button class="view-btn active" id="viewList">📋 Liste</button>
+            <button class="view-btn" id="viewMap">🗺️ Carte</button>
+        </div>
+
+        <div class="results-layout" id="resultsLayout">
+            <div class="results-list" id="resultsList">
+                <p class="no-results">Effectuez une recherche pour voir les professionnels.</p>
+            </div>
+            <div class="results-map" id="mapContainer"></div>
+        </div>
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Recherche lancée</div>
+
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="app-sidebar" id="appSidebar">
+        <!-- ... (identique aux autres pages, repris de index.html) ... -->
+        <div class="sidebar-header">
+            <div class="brand">
+                <a href="index.html" class="logo-mark" aria-hidden="true" style="width: 120px; height: 30px;"></a>
+            </div>
+            <button class="close-sidebar" id="closeSidebar">&times;</button>
+        </div>
+        <a href="#" class="nav-item">Mon profil</a>
+        <a href="#" class="nav-item">Mes favoris</a>
+        <a href="#" class="nav-item">Mes rendez-vous</a>
+        <a href="login.html" class="nav-item logout">Déconnexion</a>
+    </aside>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // ---- Gestion du menu mobile & sidebar (identique aux autres pages) ----
+        const header = document.getElementById("header");
+        const mobileMenu = document.getElementById("mobileMenu");
+        mobileMenu?.addEventListener("click", () => {
+            header.classList.toggle("menu-open");
+            mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
+        });
+
+        const sidebarToggle = document.getElementById("sidebarToggle");
+        const appSidebar = document.getElementById("appSidebar");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        const closeSidebarBtn = document.getElementById("closeSidebar");
+
+        function toggleSidebar() {
+            appSidebar.classList.toggle("open");
+            sidebarOverlay.classList.toggle("open");
+        }
+        sidebarToggle?.addEventListener("click", toggleSidebar);
+        closeSidebarBtn?.addEventListener("click", toggleSidebar);
+        sidebarOverlay?.addEventListener("click", toggleSidebar);
+
+        // ---- Gestion de la vue (liste / carte) ----
+        const viewListBtn = document.getElementById("viewList");
+        const viewMapBtn = document.getElementById("viewMap");
+        const resultsList = document.getElementById("resultsList");
+        const mapContainer = document.getElementById("mapContainer");
+
+        viewListBtn.addEventListener("click", () => {
+            resultsList.style.display = "block";
+            mapContainer.style.display = "none";
+            viewListBtn.classList.add("active");
+            viewMapBtn.classList.remove("active");
+        });
+
+        viewMapBtn.addEventListener("click", () => {
+            resultsList.style.display = "none";
+            mapContainer.style.display = "block";
+            viewMapBtn.classList.add("active");
+            viewListBtn.classList.remove("active");
+            // Recentrer la carte si nécessaire
+            if (map) map.invalidateSize();
+        });
+
+        // Par défaut, on cache la carte (vue liste)
+        mapContainer.style.display = "none";
+
+        // ---- Initialisation de la carte Leaflet ----
+        let map = L.map('mapContainer').setView([48.3904, -4.4869], 13); // Brest par défaut
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        let markers = [];
+
+        // ---- Recherche (AJAX) ----
+        const searchForm = document.getElementById("searchForm");
+        const nameInput = document.getElementById("nameInput");
+        const skillInput = document.getElementById("skillInput");
+        const pathologyInput = document.getElementById("pathologyInput");
+
+        // Pré-remplissage des champs depuis l'URL (si on vient de l'accueil)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('name')) nameInput.value = urlParams.get('name');
+        if (urlParams.get('skill')) skillInput.value = urlParams.get('skill');
+        if (urlParams.get('pathology')) pathologyInput.value = urlParams.get('pathology');
+        if (nameInput.value || skillInput.value || pathologyInput.value) {
+            performSearch();
+        }
+
+        searchForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            performSearch();
+        });
+
+        async function performSearch() {
+            const name = nameInput.value.trim();
+            const skill = skillInput.value.trim();
+            const pathology = pathologyInput.value.trim();
+
+            // Nettoyer les marqueurs existants
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            try {
+                let url = `../php/search.php?name=${encodeURIComponent(name)}&skill=${encodeURIComponent(skill)}&pathology=${encodeURIComponent(pathology)}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Erreur réseau");
+                const data = await response.json();
+
+                displayResults(data);
+            } catch (error) {
+                console.error(error);
+                document.getElementById("resultsList").innerHTML = `<p class="no-results">Erreur lors de la recherche. Veuillez réessayer.</p>`;
+            }
+        }
+
+        function displayResults(professionals) {
+            resultsList.innerHTML = "";
+            if (!professionals || professionals.length === 0) {
+                resultsList.innerHTML = `<p class="no-results">Aucun professionnel trouvé.</p>`;
+                return;
+            }
+
+            // Ajouter les cartes de résultats
+            professionals.forEach(pro => {
+                const card = document.createElement("div");
+                card.className = "result-card";
+                card.innerHTML = `
+                    <div class="result-avatar">${pro.initiales || pro.name.charAt(0).toUpperCase()}</div>
+                    <div class="result-info">
+                        <h3>${pro.name || pro.username}</h3>
+                        <p>${pro.job_title || "Professionnel de santé"}</p>
+                        <p>${pro.address || ""} ${pro.city || ""}</p>
+                    </div>
+                    <div class="result-distance">${pro.distance ? pro.distance.toFixed(1) + " km" : ""}</div>
+                `;
+                card.addEventListener("click", () => {
+                    // Rediriger vers la fiche (à créer ultérieurement)
+                    window.location.href = `fiche.html?id=${pro.id}`;
+                });
+                resultsList.appendChild(card);
+
+                // Ajouter un marqueur sur la carte
+                if (pro.latitude && pro.longitude) {
+                    const marker = L.marker([pro.latitude, pro.longitude]).addTo(map);
+                    marker.bindPopup(`<b>${pro.name || pro.username}</b><br>${pro.job_title || ""}`);
+                    markers.push(marker);
+                }
+            });
+
+            // Ajuster la vue de la carte pour voir tous les marqueurs
+            if (markers.length > 0) {
+                const group = L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+    </script>
+</body>
+</html>

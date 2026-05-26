@@ -5,6 +5,43 @@ if (!isset($_SESSION["user_id"])) {
     header("Location: ../html/login.html");
     exit;
 }
+
+require_once "db.php";
+
+$stmt = $pdo->prepare("
+    SELECT 
+        id,
+        username,
+        full_name,
+        email,
+        phone,
+        address,
+        city,
+        postal_code,
+        birth_date,
+        gender
+    FROM users
+    WHERE id = ?
+    LIMIT 1
+");
+
+$stmt->execute([$_SESSION["user_id"]]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+    session_destroy();
+    header("Location: ../html/login.html");
+    exit;
+}
+
+function e($value)
+{
+    return htmlspecialchars($value ?? "", ENT_QUOTES, "UTF-8");
+}
+
+$role = $_SESSION["role"] ?? "patient";
+$roleLabel = $role === "doctor" ? "Professionnel de santé" : ($role === "admin" ? "Administrateur" : "Patient");
+$avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: "U", 0, 1, "UTF-8"));
 ?>
 
 <!DOCTYPE html>
@@ -210,25 +247,26 @@ if (!isset($_SESSION["user_id"])) {
                 </button>
 
                 <div class="brand">
-                    <a href="index.html" class="logo-mark" aria-hidden="true"></a>
+                    <a href="../html/index.html" class="logo-mark" aria-hidden="true"></a>
                 </div>
             </div>
 
             <nav aria-label="Navigation principale">
-                <a href="index.html">Accueil</a>
-                <a href="recherche.html">Recherche</a>
-                <a href="apropos.html">À propos</a>
-                <a href="contact.html">Contact</a>
+                <a href="../html/index.html">Accueil</a>
+                <a href="../html/recherche.html">Recherche</a>
+                <a href="../html/apropos.html">À propos</a>
+                <a href="../html/contact.html">Contact</a>
             </nav>
 
-            <div class="header-actions">
-                <a href="login.html" class="btn-outline"
+            <div class="header-actions" id="headerActions">
+                <a href="monprofil.php" class="btn-outline"
                     style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
-                    Se connecter
+                    Mon profil
                 </a>
-                <a href="register.html" class="btn-primary"
+
+                <a href="../php/logout.php" class="btn-primary"
                     style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
-                    S’inscrire
+                    Déconnexion
                 </a>
             </div>
 
@@ -243,9 +281,9 @@ if (!isset($_SESSION["user_id"])) {
 
             <div class="profile-layout">
                 <aside class="profile-card">
-                    <div class="profile-avatar" id="profileAvatar">U</div>
-                    <h2 id="profileName">Utilisateur</h2>
-                    <span class="profile-role" id="profileRole">Compte</span>
+                    <div class="profile-avatar" id="profileAvatar"><?= e($avatarLetter) ?></div>
+                    <h2 id="profileName"><?= e($user["full_name"]) ?></h2>
+                    <span class="profile-role" id="profileRole"><?= e($roleLabel) ?></span>
 
                     <div class="profile-menu">
                         <a href="monprofil.html" class="active">Mon profil</a>
@@ -259,54 +297,63 @@ if (!isset($_SESSION["user_id"])) {
 
                     <form class="profile-form" id="profileForm">
                         <label class="profile-field">
+                            <span>Nom d’utilisateur</span>
+                            <input type="text" id="username" name="username" value="<?= e($user["username"]) ?>" readonly>
+                        </label>
+
+                        <label class="profile-field">
                             <span>Nom complet</span>
-                            <input type="text" id="fullName" name="full_name" placeholder="Nom complet">
+                            <input type="text" id="fullName" name="full_name" value="<?= e($user["full_name"]) ?>">
                         </label>
 
                         <label class="profile-field">
                             <span>Email</span>
-                            <input type="email" id="email" name="email" placeholder="email@example.com">
+                            <input type="email" id="email" name="email" value="<?= e($user["email"]) ?>">
                         </label>
 
                         <label class="profile-field">
                             <span>Téléphone</span>
-                            <input type="tel" id="phone" name="phone" placeholder="06 12 34 56 78">
+                            <input type="tel" id="phone" name="phone" value="<?= e($user["phone"]) ?>">
                         </label>
 
                         <label class="profile-field">
                             <span>Rôle</span>
                             <select id="role" name="role" disabled>
-                                <option value="patient">Patient</option>
-                                <option value="doctor">Professionnel de santé</option>
-                                <option value="admin">Administrateur</option>
+                                <option value="patient" <?= $role === "patient" ? "selected" : "" ?>>Patient</option>
+                                <option value="doctor" <?= $role === "doctor" ? "selected" : "" ?>>Professionnel de santé</option>
+                                <option value="admin" <?= $role === "admin" ? "selected" : "" ?>>Administrateur</option>
                             </select>
                         </label>
 
                         <label class="profile-field full">
                             <span>Adresse</span>
-                            <input type="text" id="address" name="address" placeholder="Adresse complète">
+                            <input type="text" id="address" name="address" value="<?= e($user["address"]) ?>">
                         </label>
 
                         <label class="profile-field">
                             <span>Ville</span>
-                            <input type="text" id="city" name="city" placeholder="Ville">
+                            <input type="text" id="city" name="city" value="<?= e($user["city"]) ?>">
                         </label>
 
                         <label class="profile-field">
                             <span>Code postal</span>
-                            <input type="text" id="postalCode" name="postal_code" placeholder="Code postal">
+                            <input type="text" id="postalCode" name="postal_code" value="<?= e($user["postal_code"]) ?>">
                         </label>
 
-                        <label class="profile-field full">
-                            <span>À propos de moi</span>
-                            <textarea id="description" name="description" rows="4"
-                                placeholder="Petite description ou informations utiles..."></textarea>
+                        <label class="profile-field">
+                            <span>Date de naissance</span>
+                            <input type="date" id="birthDate" name="birth_date" value="<?= e($user["birth_date"]) ?>">
                         </label>
 
-                        <div class="profile-actions">
-                            <button type="button" class="logout-btn" id="logoutBtn">Déconnexion</button>
-                            <button type="submit" class="save-profile-btn">Enregistrer</button>
-                        </div>
+                        <label class="profile-field">
+                            <span>Genre</span>
+                            <select id="gender" name="gender">
+                                <option value="">Non renseigné</option>
+                                <option value="male" <?= $user["gender"] === "male" ? "selected" : "" ?>>Homme</option>
+                                <option value="female" <?= $user["gender"] === "female" ? "selected" : "" ?>>Femme</option>
+                                <option value="other" <?= $user["gender"] === "other" ? "selected" : "" ?>>Autre</option>
+                            </select>
+                        </label>
                     </form>
                 </section>
             </div>
@@ -325,10 +372,10 @@ if (!isset($_SESSION["user_id"])) {
             <button class="close-sidebar" id="closeSidebar">&times;</button>
         </div>
 
-        <a href="monprofil.html" class="nav-item active">Mon profil</a>
-        <a href="favoris.html" class="nav-item">Mes favoris</a>
-        <a href="rendezvous.html" class="nav-item">Mes rendez-vous</a>
-        <a href="../html/index.html" class="nav-item logout">Déconnexion</a>
+        <a href="monprofil.php" class="nav-item active">Mon profil</a>
+        <a href="../html/favoris.html" class="nav-item">Mes favoris</a>
+        <a href="../html/rendezvous.html" class="nav-item">Mes rendez-vous</a>
+        <a href="logout.php" class="nav-item logout">Déconnexion</a>
     </aside>
 
     <script src="../js/main.js"></script>
@@ -350,71 +397,6 @@ if (!isset($_SESSION["user_id"])) {
             toast.classList.add("show");
             setTimeout(() => toast.classList.remove("show"), 2200);
         }
-
-        async function checkConnection() {
-            try {
-                const response = await fetch("../php/checkAuth.php");
-                const data = await response.json();
-
-                if (!data.connected) {
-                    window.location.href = "login.html";
-                    return;
-                }
-
-                loadProfile();
-            } catch (error) {
-                console.error(error);
-                window.location.href = "login.html";
-            }
-        }
-
-        async function loadProfile() {
-            /*
-               Plus tard, tu peux remplacer cette partie par :
-               fetch("../php/getMyProfile.php")
-            */
-
-            const user = {
-                full_name: "Utilisateur connecté",
-                email: "",
-                phone: "",
-                role: "patient",
-                address: "",
-                city: "",
-                postal_code: "",
-                description: ""
-            };
-
-            document.getElementById("fullName").value = user.full_name || "";
-            document.getElementById("email").value = user.email || "";
-            document.getElementById("phone").value = user.phone || "";
-            document.getElementById("role").value = user.role || "patient";
-            document.getElementById("address").value = user.address || "";
-            document.getElementById("city").value = user.city || "";
-            document.getElementById("postalCode").value = user.postal_code || "";
-            document.getElementById("description").value = user.description || "";
-
-            document.getElementById("profileName").textContent = user.full_name || "Utilisateur";
-            document.getElementById("profileRole").textContent =
-                user.role === "doctor" ? "Professionnel de santé" :
-                user.role === "admin" ? "Administrateur" :
-                "Patient";
-
-            document.getElementById("profileAvatar").textContent =
-                (user.full_name || "U").charAt(0).toUpperCase();
-        }
-
-        document.getElementById("profileForm").addEventListener("submit", (event) => {
-            event.preventDefault();
-            showToast("Profil enregistré");
-        });
-
-        document.getElementById("logoutBtn").addEventListener("click", async () => {
-            await fetch("../php/logout.php");
-            window.location.href = "login.html";
-        });
-
-        checkConnection();
     </script>
 </body>
 

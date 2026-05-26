@@ -459,10 +459,7 @@
                 <a href="contact.html">Contact</a>
             </nav>
 
-            <div class="header-actions">
-                <a href="login.html" class="btn-outline">Se connecter</a>
-                <a href="register.html" class="btn-primary">S’inscrire</a>
-            </div>
+            <div class="header-actions" id="headerActions" style="visibility: hidden;"></div>
 
             <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
         </header>
@@ -704,6 +701,69 @@
                 resultsList.appendChild(card);
             });
         }
+    </script>
+
+    <script>
+        async function updateHeaderAuth() {
+            const headerActions = document.getElementById("headerActions");
+
+            if (!headerActions) return;
+
+            try {
+                const response = await fetch("../php/checkAuth.php", {
+                    cache: "no-store"
+                });
+
+                const data = await response.json();
+
+                if (data.connected) {
+                    headerActions.innerHTML = `
+                    <a href="../php/monprofil.php" class="btn-outline"
+                        style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        Mon profil
+                    </a>
+
+                    <a href="../php/logout.php" class="btn-primary"
+                        style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        Déconnexion
+                    </a>
+                `;
+                } else {
+                    headerActions.innerHTML = `
+                    <a href="login.html" class="btn-outline"
+                        style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        Se connecter
+                    </a>
+
+                    <a href="register.html" class="btn-primary"
+                        style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        S’inscrire
+                    </a>
+                `;
+                }
+
+                headerActions.style.visibility = "visible";
+
+            } catch (error) {
+                console.error("Erreur vérification connexion:", error);
+
+                headerActions.innerHTML = `
+                <a href="login.html" class="btn-outline"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    Se connecter
+                </a>
+
+                <a href="register.html" class="btn-primary"
+                    style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    S’inscrire
+                </a>
+            `;
+
+                headerActions.style.visibility = "visible";
+            }
+        }
+
+        updateHeaderAuth();
     </script>
 </body>
 

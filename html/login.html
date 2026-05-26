@@ -223,6 +223,14 @@
     <div class="toast" id="toast">Connexion réussie !</div>
 
     <script>
+        fetch("../php/checkAuth.php", { cache: "no-store" })
+            .then(response => response.json())
+            .then(data => {
+                if (data.connected) {
+                    window.location.href = "../php/monprofil.php";
+                }
+            });
+
         const header = document.getElementById("header");
         const mobileMenu = document.getElementById("mobileMenu");
         const form = document.getElementById("loginForm");
@@ -245,41 +253,41 @@
 
         // Soumission du formulaire
         form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+            event.preventDefault();
 
-    const email = document.getElementById("emailInput").value.trim();
-    const password = document.getElementById("passwordInput").value;
+            const email = document.getElementById("emailInput").value.trim();
+            const password = document.getElementById("passwordInput").value;
 
-    try {
-        const response = await fetch("../php/login.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: new URLSearchParams({
-                email: email,
-                password: password
-            })
+            try {
+                const response = await fetch("../php/login.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    showToast(data.message || "Email ou mot de passe incorrect.");
+                    return;
+                }
+
+                showToast("Connexion réussie !");
+
+                setTimeout(() => {
+                    window.location.href = "../php/monprofil.php";
+                }, 800);
+
+            } catch (error) {
+                console.error(error);
+                showToast("Erreur serveur. Vérifiez login.php.");
+            }
         });
-
-        const data = await response.json();
-
-        if (!data.success) {
-            showToast(data.message || "Email ou mot de passe incorrect.");
-            return;
-        }
-
-        showToast("Connexion réussie !");
-
-        setTimeout(() => {
-            window.location.href = "../php/monprofil.php";
-        }, 800);
-
-    } catch (error) {
-        console.error(error);
-        showToast("Erreur serveur. Vérifiez login.php.");
-    }
-});
     </script>
 </body>
 

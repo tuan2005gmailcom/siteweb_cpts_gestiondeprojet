@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,12 +15,14 @@
             border-radius: 16px;
             box-shadow: var(--shadow);
         }
+
         .fiche-header {
             display: flex;
             gap: 24px;
             align-items: center;
             margin-bottom: 30px;
         }
+
         .avatar-large {
             width: 100px;
             height: 100px;
@@ -32,36 +35,46 @@
             color: var(--primary);
             font-weight: 700;
         }
+
         .fiche-title h1 {
             margin: 0 0 6px;
             font-size: 32px;
         }
+
         .fiche-title p {
             margin: 0;
             color: var(--muted);
         }
+
         .fiche-section {
             margin-bottom: 28px;
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border);
         }
-        .fiche-section:last-child { border-bottom: none; }
+
+        .fiche-section:last-child {
+            border-bottom: none;
+        }
+
         .fiche-section h2 {
             font-size: 20px;
             margin-bottom: 12px;
             color: var(--text);
         }
+
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 16px;
         }
+
         .info-item {
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 14px;
         }
+
         .tag {
             display: inline-block;
             padding: 6px 14px;
@@ -70,7 +83,10 @@
             margin: 4px;
             font-size: 13px;
         }
-        .btn-favoris, .btn-feedback, .btn-print {
+
+        .btn-favoris,
+        .btn-feedback,
+        .btn-print {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -82,17 +98,29 @@
             background: var(--white);
             margin-right: 10px;
         }
-        .btn-favoris.active { background: #fff0f0; color: #d6324b; }
+
+        .btn-favoris.active {
+            background: #fff0f0;
+            color: #d6324b;
+        }
+
         .feedback-modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.4);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
             z-index: 100;
             align-items: center;
             justify-content: center;
         }
-        .feedback-modal.open { display: flex; }
+
+        .feedback-modal.open {
+            display: flex;
+        }
+
         .modal-content {
             background: white;
             padding: 24px;
@@ -100,14 +128,26 @@
             max-width: 500px;
             width: 90%;
         }
+
         @media print {
-            header, .btn-favoris, .btn-feedback, .btn-print, .sidebar-overlay, .app-sidebar {
+
+            header,
+            .btn-favoris,
+            .btn-feedback,
+            .btn-print,
+            .sidebar-overlay,
+            .app-sidebar {
                 display: none !important;
             }
-            .fiche-container { box-shadow: none; border: none; }
+
+            .fiche-container {
+                box-shadow: none;
+                border: none;
+            }
         }
     </style>
 </head>
+
 <body>
     <main class="page">
         <header id="header">
@@ -282,16 +322,63 @@
                 const msg = document.getElementById('feedbackMsg').value;
                 fetch('../php/submit_feedback.php', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ professional_id: pro.id, type, message: msg })
                 })
-                .then(r => r.json())
-                .then(res => {
-                    alert(res.message || "Feedback envoyé !");
-                    modal.classList.remove('open');
-                });
+                    .then(r => r.json())
+                    .then(res => {
+                        alert(res.message || "Feedback envoyé !");
+                        modal.classList.remove('open');
+                    });
             });
         }
     </script>
+
+    <script>
+        async function updateHeaderAuth() {
+            const headerActions = document.getElementById("headerActions");
+
+            if (!headerActions) return;
+
+            try {
+                const response = await fetch("../php/checkAuth.php", {
+                    cache: "no-store"
+                });
+
+                const data = await response.json();
+
+                if (data.connected) {
+                    headerActions.innerHTML = `
+                    <a href="../php/monprofil.php" class="btn-outline"
+                        style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        Mon profil
+                    </a>
+
+                    <a href="../php/logout.php" class="btn-primary"
+                        style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        Déconnexion
+                    </a>
+                `;
+                } else {
+                    headerActions.innerHTML = `
+                    <a href="login.html" class="btn-outline"
+                        style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        Se connecter
+                    </a>
+
+                    <a href="register.html" class="btn-primary"
+                        style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        S’inscrire
+                    </a>
+                `;
+                }
+            } catch (error) {
+                console.error("Erreur vérification connexion:", error);
+            }
+        }
+
+        updateHeaderAuth();
+    </script>
 </body>
+
 </html>

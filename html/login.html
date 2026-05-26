@@ -174,7 +174,7 @@
                 <h1>Bienvenue</h1>
                 <p>Connectez-vous pour accéder à votre espace personnel.</p>
 
-                <form class="search-panel login-form" id="loginForm">
+                <form class="search-panel login-form" id="loginForm" autocomplete="off">
 
                     <label class="field">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -183,7 +183,7 @@
                             </path>
                             <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
-                        <input id="emailInput" type="email" placeholder="Adresse e-mail" required />
+                        <input id="emailInput" type="email" placeholder="Adresse e-mail" required autocomplete="off" />
                     </label>
 
                     <label class="field" style="margin-bottom: 12px;">
@@ -192,13 +192,10 @@
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
-                        <input id="passwordInput" type="password" placeholder="Mot de passe" required />
+                        <input id="passwordInput" type="password" placeholder="Mot de passe" required autocomplete="off"/>
                     </label>
 
-                    <div class="login-options">
-                        <label>
-                            <input type="checkbox" id="rememberMe"> Se souvenir de moi
-                        </label>
+                    <div class="login-options" style="justify-content: flex-end;">
                         <a href="#">Mot de passe oublié ?</a>
                     </div>
 
@@ -259,7 +256,7 @@
             const password = document.getElementById("passwordInput").value;
 
             try {
-                const response = await fetch("../php/login.php", {
+const response = await fetch("../php/login.php", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"

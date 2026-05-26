@@ -19,7 +19,8 @@ $stmt = $pdo->prepare("
         city,
         postal_code,
         birth_date,
-        gender
+        gender,
+        role
     FROM users
     WHERE id = ?
     LIMIT 1
@@ -39,7 +40,7 @@ function e($value)
     return htmlspecialchars($value ?? "", ENT_QUOTES, "UTF-8");
 }
 
-$role = $_SESSION["role"] ?? "patient";
+$role = $user["role"] ?? ($_SESSION["role"] ?? "patient");
 $roleLabel = $role === "doctor" ? "Professionnel de santé" : ($role === "admin" ? "Administrateur" : "Patient");
 $avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: "U", 0, 1, "UTF-8"));
 ?>
@@ -286,9 +287,9 @@ $avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: 
                     <span class="profile-role" id="profileRole"><?= e($roleLabel) ?></span>
 
                     <div class="profile-menu">
-                        <a href="monprofil.html" class="active">Mon profil</a>
-                        <a href="favoris.html">Mes favoris</a>
-                        <a href="rendezvous.html">Mes rendez-vous</a>
+                        <a href="monprofil.php" class="active">Mon profil</a>
+                        <a href="../html/favoris.html">Mes favoris</a>
+                        <a href="../html/rendezvous.html">Mes rendez-vous</a>
                     </div>
                 </aside>
 
@@ -367,7 +368,7 @@ $avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: 
     <aside class="app-sidebar" id="appSidebar">
         <div class="sidebar-header">
             <div class="brand">
-                <a href="index.html" class="logo-mark" aria-hidden="true" style="width: 120px; height: 30px;"></a>
+                <a href="../html/index.html" class="logo-mark" aria-hidden="true" style="width: 120px; height: 30px;"></a>
             </div>
             <button class="close-sidebar" id="closeSidebar">&times;</button>
         </div>

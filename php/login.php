@@ -21,7 +21,8 @@ $sql = "
         username,
         full_name,
         email,
-        password_hash
+        password_hash,
+        role
     FROM users
     WHERE email = ?
     LIMIT 1
@@ -39,7 +40,7 @@ if (!$user) {
     exit;
 }
 
-if (!password_verify($password, $user["password_hash"])) {
+if (!hash_equals($user["password_hash"], hash("sha256", $password))) {
     echo json_encode([
         "success" => false,
         "message" => "Mot de passe incorrect."
@@ -47,11 +48,13 @@ if (!password_verify($password, $user["password_hash"])) {
     exit;
 }
 
+session_regenerate_id(true);
+
 $_SESSION["user_id"] = $user["id"];
 $_SESSION["username"] = $user["username"];
 $_SESSION["full_name"] = $user["full_name"];
 $_SESSION["email"] = $user["email"];
-$_SESSION["role"] = "patient";
+$_SESSION["role"] = $user["role"];
 
 $update = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
 $update->execute([$user["id"]]);
@@ -60,4 +63,3 @@ echo json_encode([
     "success" => true,
     "message" => "Connexion réussie."
 ]);
-?>

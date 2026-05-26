@@ -161,6 +161,7 @@
                     S’inscrire
                 </a>
             </div>
+            <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
         </header>
 
         <section class="hero login-layout">
@@ -228,10 +229,12 @@
         const toast = document.getElementById("toast");
 
         // Gestion du menu mobile
-        mobileMenu.addEventListener("click", () => {
-            header.classList.toggle("menu-open");
-            mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
-        });
+        if (mobileMenu) {
+            mobileMenu.addEventListener("click", () => {
+                header.classList.toggle("menu-open");
+                mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
+            });
+        }
 
         // Fonction pour afficher la notification (Toast)
         function showToast(message) {

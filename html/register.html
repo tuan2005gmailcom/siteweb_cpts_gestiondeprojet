@@ -14,7 +14,6 @@
             <div class="brand">
                 <a href="index.html" class="logo-mark" aria-hidden="true"></a>
             </div>
-            </div>
 
             <nav aria-label="Navigation principale">
                 <a href="index.html">Accueil</a>
@@ -206,10 +205,12 @@
         const specialitySelect = document.getElementById("specialitySelect");
         const pathologyCheckboxes = document.getElementById("pathologyCheckboxes");
 
-        mobileMenu.addEventListener("click", () => {
-            header.classList.toggle("menu-open");
-            mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
-        });
+        if (mobileMenu) {
+            mobileMenu.addEventListener("click", () => {
+                header.classList.toggle("menu-open");
+                mobileMenu.textContent = header.classList.contains("menu-open") ? "×" : "☰";
+            });
+        }
 
         function showToast(message) {
             toast.textContent = message;
@@ -231,7 +232,7 @@
             });
         });
 
-        fetch("getSpecialities.php")
+        fetch("../php/getSpecialities.php")
             .then(response => response.json())
             .then(specialities => {
                 specialities.forEach(speciality => {
@@ -255,7 +256,7 @@
                 return;
             }
 
-            fetch(`getPathologies.php?speciality_id=${specialityId}`)
+            fetch(`../php/getPathologies.php?speciality_id=${specialityId}`)
                 .then(response => response.json())
                 .then(pathologies => {
                     pathologyCheckboxes.innerHTML = "";

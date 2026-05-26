@@ -43,6 +43,80 @@ function e($value)
 $role = $user["role"] ?? ($_SESSION["role"] ?? "patient");
 $roleLabel = $role === "doctor" ? "Professionnel de santé" : ($role === "admin" ? "Administrateur" : "Patient");
 $avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: "U", 0, 1, "UTF-8"));
+
+$professional = null;
+$profileBadgeLabel = $roleLabel;
+
+if ($role === "doctor") {
+    $stmtProfessional = $pdo->prepare("
+        SELECT 
+            id,
+            job_title
+        FROM professionals
+        WHERE user_id = ?
+        LIMIT 1
+    ");
+
+    $stmtProfessional->execute([$user["id"]]);
+    $professional = $stmtProfessional->fetch(PDO::FETCH_ASSOC);
+
+    if ($professional && !empty($professional["job_title"])) {
+        $profileBadgeLabel = $professional["job_title"];
+    }
+}
+
+$professional = null;
+$doctorSpecialities = [];
+$doctorPathologies = [];
+
+if ($role === "doctor") {
+    $stmtProfessional = $pdo->prepare("
+        SELECT 
+            id,
+            first_name,
+            last_name,
+            job_title,
+            description,
+            phone,
+            email,
+            address,
+            city,
+            postal_code,
+            is_available
+        FROM professionals
+        WHERE user_id = ?
+        LIMIT 1
+    ");
+
+    $stmtProfessional->execute([$user["id"]]);
+    $professional = $stmtProfessional->fetch(PDO::FETCH_ASSOC);
+
+    if ($professional) {
+        $stmtSpecialities = $pdo->prepare("
+            SELECT s.name
+            FROM specialities s
+            JOIN professional_specialities ps
+                ON s.id = ps.speciality_id
+            WHERE ps.professional_id = ?
+            ORDER BY s.name
+        ");
+
+        $stmtSpecialities->execute([$professional["id"]]);
+        $doctorSpecialities = $stmtSpecialities->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmtPathologies = $pdo->prepare("
+            SELECT p.name
+            FROM pathologies p
+            JOIN professional_pathologies pp
+                ON p.id = pp.pathology_id
+            WHERE pp.professional_id = ?
+            ORDER BY p.name
+        ");
+
+        $stmtPathologies->execute([$professional["id"]]);
+        $doctorPathologies = $stmtPathologies->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -232,6 +306,37 @@ $avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: 
                 padding: 28px 20px;
             }
         }
+
+        .doctor-info-card {
+            margin-top: 24px;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .profile-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .empty-profile-message {
+            color: var(--muted);
+            background: #f8fbff;
+            border: 1px dashed var(--border);
+            padding: 16px;
+            border-radius: 12px;
+            line-height: 1.6;
+        }
     </style>
 </head>
 
@@ -284,7 +389,7 @@ $avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: 
                 <aside class="profile-card">
                     <div class="profile-avatar" id="profileAvatar"><?= e($avatarLetter) ?></div>
                     <h2 id="profileName"><?= e($user["full_name"]) ?></h2>
-                    <span class="profile-role" id="profileRole"><?= e($roleLabel) ?></span>
+                    <span class="profile-role" id="profileRole"><?= e($profileBadgeLabel) ?></span>
 
                     <div class="profile-menu">
                         <a href="monprofil.php" class="active">Mon profil</a>
@@ -319,11 +424,13 @@ $avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: 
 
                         <label class="profile-field">
                             <span>Rôle</span>
-                            <select id="role" name="role" disabled>
-                                <option value="patient" <?= $role === "patient" ? "selected" : "" ?>>Patient</option>
-                                <option value="doctor" <?= $role === "doctor" ? "selected" : "" ?>>Professionnel de santé</option>
-                                <option value="admin" <?= $role === "admin" ? "selected" : "" ?>>Administrateur</option>
-                            </select>
+                            <input
+                                type="text"
+                                id="role"
+                                name="role"
+                                value="<?= e($roleLabel) ?>"
+                                readonly
+                                class="readonly-field">
                         </label>
 
                         <label class="profile-field full">
@@ -356,6 +463,63 @@ $avatarLetter = strtoupper(mb_substr($user["full_name"] ?: $user["username"] ?: 
                             </select>
                         </label>
                     </form>
+                    <?php if ($role === "doctor"): ?>
+                        <div class="doctor-info-card">
+                            <h2>Profil professionnel</h2>
+
+                            <?php if (!$professional): ?>
+                                <p class="empty-profile-message">
+                                    Aucun profil professionnel n’est encore lié à ce compte.
+                                    Vérifie que la colonne <strong>professionals.user_id</strong> correspond bien à l’id de ce compte dans <strong>users</strong>.
+                                </p>
+                            <?php else: ?>
+                                <form class="profile-form">
+                                    <label class="profile-field">
+                                        <span>Métier / spécialité principale</span>
+                                        <input type="text" value="<?= e($professional["job_title"]) ?>" readonly>
+                                    </label>
+
+                                    <label class="profile-field">
+                                        <span>Disponibilité</span>
+                                        <input type="text" value="<?= $professional["is_available"] ? "Disponible" : "Bientôt disponible" ?>" readonly>
+                                    </label>
+
+                                    <label class="profile-field full">
+                                        <span>Description professionnelle</span>
+                                        <textarea rows="4" readonly><?= e($professional["description"]) ?></textarea>
+                                    </label>
+
+                                    <div class="profile-field full">
+                                        <span>Compétences</span>
+
+                                        <div class="tag-list">
+                                            <?php if (count($doctorSpecialities) > 0): ?>
+                                                <?php foreach ($doctorSpecialities as $speciality): ?>
+                                                    <span class="profile-tag"><?= e($speciality["name"]) ?></span>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <p class="empty-profile-message">Aucune compétence enregistrée.</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-field full">
+                                        <span>Pathologies prises en charge</span>
+
+                                        <div class="tag-list">
+                                            <?php if (count($doctorPathologies) > 0): ?>
+                                                <?php foreach ($doctorPathologies as $pathology): ?>
+                                                    <span class="profile-tag"><?= e($pathology["name"]) ?></span>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <p class="empty-profile-message">Aucune pathologie enregistrée.</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </form>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 </section>
             </div>
         </section>

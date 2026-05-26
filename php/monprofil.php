@@ -328,7 +328,7 @@ if (!isset($_SESSION["user_id"])) {
         <a href="monprofil.html" class="nav-item active">Mon profil</a>
         <a href="favoris.html" class="nav-item">Mes favoris</a>
         <a href="rendezvous.html" class="nav-item">Mes rendez-vous</a>
-        <a href="login.html" class="nav-item logout">Déconnexion</a>
+        <a href="../html/index.html" class="nav-item logout">Déconnexion</a>
     </aside>
 
     <script src="../js/main.js"></script>

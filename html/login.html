@@ -244,17 +244,42 @@
         }
 
         // Soumission du formulaire
-        form.addEventListener("submit", (event) => {
-            event.preventDefault(); // Empêche le rechargement de la page
+        form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-            const email = document.getElementById("emailInput").value;
+    const email = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
 
-            // Simulation d'une connexion réussie
-            showToast(`Bienvenue ! Connexion en cours...`);
-
-            // Réinitialise le mot de passe (mais garde l'email pour le réalisme)
-            document.getElementById("passwordInput").value = "";
+    try {
+        const response = await fetch("../php/login.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                email: email,
+                password: password
+            })
         });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            showToast(data.message || "Email ou mot de passe incorrect.");
+            return;
+        }
+
+        showToast("Connexion réussie !");
+
+        setTimeout(() => {
+            window.location.href = "../php/monprofil.php";
+        }, 800);
+
+    } catch (error) {
+        console.error(error);
+        showToast("Erreur serveur. Vérifiez login.php.");
+    }
+});
     </script>
 </body>
 

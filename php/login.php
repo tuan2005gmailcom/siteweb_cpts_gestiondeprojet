@@ -31,10 +31,18 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([$email]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$user || !password_verify($password, $user["password_hash"])) {
+if (!$user) {
     echo json_encode([
         "success" => false,
-        "message" => "Email ou mot de passe incorrect."
+        "message" => "Aucun compte trouvé avec cet email."
+    ]);
+    exit;
+}
+
+if (!password_verify($password, $user["password_hash"])) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Mot de passe incorrect."
     ]);
     exit;
 }
@@ -43,8 +51,6 @@ $_SESSION["user_id"] = $user["id"];
 $_SESSION["username"] = $user["username"];
 $_SESSION["full_name"] = $user["full_name"];
 $_SESSION["email"] = $user["email"];
-
-// Si tu n'as pas encore de colonne role dans users
 $_SESSION["role"] = "patient";
 
 $update = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");

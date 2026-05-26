@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,21 +15,25 @@
             background: var(--white);
             border-bottom: 1px solid var(--border);
         }
+
         .results-layout {
             display: flex;
             min-height: 70vh;
         }
+
         .results-list {
             flex: 1;
             padding: 24px;
             overflow-y: auto;
             max-height: 80vh;
         }
+
         .results-map {
             width: 45%;
             min-height: 500px;
             border-left: 1px solid var(--border);
         }
+
         .result-card {
             display: flex;
             gap: 18px;
@@ -41,10 +46,12 @@
             transition: 0.2s;
             align-items: center;
         }
+
         .result-card:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
             transform: translateY(-2px);
         }
+
         .result-avatar {
             width: 64px;
             height: 64px;
@@ -58,31 +65,37 @@
             font-size: 24px;
             flex-shrink: 0;
         }
+
         .result-info h3 {
             margin: 0 0 4px;
             color: var(--text);
         }
+
         .result-info p {
             margin: 0;
             color: var(--muted);
             font-size: 14px;
         }
+
         .result-distance {
             margin-left: auto;
             font-weight: 700;
             color: var(--primary);
             font-size: 14px;
         }
+
         .no-results {
             text-align: center;
             padding: 48px;
             color: var(--muted);
         }
+
         .view-toggle {
             display: flex;
             gap: 8px;
             margin-bottom: 16px;
         }
+
         .view-btn {
             padding: 8px 18px;
             border-radius: 8px;
@@ -91,14 +104,17 @@
             font-weight: 600;
             cursor: pointer;
         }
+
         .view-btn.active {
             background: var(--primary);
             color: white;
         }
+
         @media (max-width: 900px) {
             .results-layout {
                 flex-direction: column;
             }
+
             .results-map {
                 width: 100%;
                 height: 300px;
@@ -106,8 +122,319 @@
                 border-top: 1px solid var(--border);
             }
         }
+
+        /* Search panel compact sur recherche.html */
+        .search-header .search-panel {
+            display: flex !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px !important;
+
+            width: auto !important;
+            max-width: none !important;
+            margin: 0 auto;
+        }
+
+        /* Tous les champs */
+        .search-header .field {
+            width: 240px !important;
+            min-width: 240px;
+        }
+
+        /* Le champ nom est plus large */
+        .search-header .field:first-child {
+            width: 290px !important;
+            min-width: 290px;
+        }
+
+        /* Les inputs remplissent bien leur box */
+        .search-header .field input {
+            width: 100%;
+        }
+
+        /* Bouton rechercher */
+        .search-header .search-btn {
+            width: auto;
+            min-width: 150px;
+            white-space: nowrap;
+        }
+
+        /* Mobile */
+        @media (max-width: 760px) {
+            .search-header .search-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-header .field,
+            .search-header .field:first-child,
+            .search-header .search-btn {
+                width: 100% !important;
+                min-width: 0;
+            }
+        }
+
+        .directory-page {
+            padding: 28px 36px 42px;
+            background: #f8fbff;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+
+        .directory-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .directory-top h1 {
+            font-size: 28px;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .directory-top p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .sort-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .sort-box select {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            background: white;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .directory-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .filter-panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 12px 28px rgba(18, 76, 145, 0.08);
+        }
+
+        .filter-panel h3 {
+            margin-bottom: 18px;
+            color: var(--text);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .filter-group span {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 12px;
+            outline: none;
+            background: white;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .filter-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .filter-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 14px 0 18px;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .filter-check input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        .filter-submit,
+        .filter-reset {
+            width: 100%;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-weight: 800;
+        }
+
+        .filter-submit {
+            background: var(--primary);
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .filter-reset {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .doctor-results {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .result-card {
+            display: grid;
+            grid-template-columns: 76px 1fr auto;
+            gap: 18px;
+            align-items: center;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 12px 28px rgba(18, 76, 145, 0.07);
+            transition: 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 36px rgba(18, 76, 145, 0.12);
+        }
+
+        .result-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: 22px;
+        }
+
+        .result-info h3 {
+            font-size: 17px;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .result-info .job {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .result-info .address,
+        .result-info .description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .result-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .status-badge {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .status-badge.available {
+            background: #e9fbe9;
+            color: #15803d;
+        }
+
+        .status-badge.unavailable {
+            background: #fff3d6;
+            color: #b45309;
+        }
+
+        .favorite-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--muted);
+        }
+
+        .details-btn {
+            text-decoration: none;
+            border: 1px solid #abc8ed;
+            color: var(--primary);
+            background: white;
+            padding: 8px 12px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--muted);
+            padding: 60px 20px;
+        }
+
+        @media (max-width: 900px) {
+            .directory-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .directory-top {
+                flex-direction: column;
+            }
+
+            .result-card {
+                grid-template-columns: 64px 1fr;
+            }
+
+            .result-actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
     </style>
 </head>
+
 <body>
     <main class="page">
         <!-- En-tête (identique aux autres pages) -->
@@ -140,53 +467,73 @@
             <button class="mobile-toggle" type="button" id="mobileMenu" aria-label="Ouvrir le menu">☰</button>
         </header>
 
-        <!-- Barre de recherche compacte -->
-        <div class="search-header">
-            <form class="search-panel" id="searchForm" autocomplete="off">
-                <label class="field">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <circle cx="11" cy="11" r="7"></circle>
-                        <path d="M20 20l-3.5-3.5"></path>
-                    </svg>
-                    <input id="nameInput" type="text" placeholder="Nom du professionnel" />
+        <section class="directory-page">
+            <div class="breadcrumb">Accueil &gt; Recherche</div>
+
+            <div class="directory-top">
+                <div>
+                    <h1>Résultats de recherche</h1>
+                    <p id="resultsCount">Chargement des professionnels...</p>
+                </div>
+
+                <label class="sort-box">
+                    <span>Trier par :</span>
+                    <select id="sortSelect">
+                        <option value="proximity">Proximité</option>
+                        <option value="name">Nom</option>
+                        <option value="availability">Disponibilité</option>
+                    </select>
                 </label>
-
-                <label class="field">
-                    <div class="custom-select">
-                        <input id="skillInput" type="text" placeholder="Compétence" autocomplete="off" />
-                        <ul id="skillsList" class="dropdown-list"></ul>
-                    </div>
-                </label>
-
-                <label class="field">
-                    <div class="custom-select">
-                        <input id="pathologyInput" type="text" placeholder="Pathologie" autocomplete="off" />
-                        <ul id="pathologyList" class="dropdown-list"></ul>
-                    </div>
-                </label>
-
-                <button class="search-btn" type="submit">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <circle cx="11" cy="11" r="7"></circle>
-                        <path d="M20 20l-3.5-3.5"></path>
-                    </svg>
-                    Rechercher
-                </button>
-            </form>
-        </div>
-
-        <!-- Résultats -->
-        <div class="view-toggle" style="padding: 0 24px; margin-top: 16px;">
-            <button class="view-btn active" id="viewList">📋 Liste</button>
-            <button class="view-btn" id="viewMap">🗺️ Carte</button>
-        </div>
-
-        <div class="results-layout" id="resultsLayout">
-            <div class="results-list" id="resultsList">
-                <p class="no-results">Effectuez une recherche pour voir les professionnels.</p>
             </div>
-            <div class="results-map" id="mapContainer"></div>
-        </div>
+
+            <div class="directory-layout">
+                <aside class="filter-panel">
+                    <h3>Filtres</h3>
+
+                    <form id="searchForm">
+                        <label class="filter-group">
+                            <span>Nom du professionnel</span>
+                            <input id="nameInput" type="text" placeholder="Nom du professionnel">
+                        </label>
+
+                        <label class="filter-group">
+                            <span>Spécialité / Compétence</span>
+                            <div class="custom-select">
+                                <input id="skillInput" type="text" placeholder="Toutes les compétences"
+                                    autocomplete="off">
+                                <ul id="skillsList" class="dropdown-list"></ul>
+                            </div>
+                        </label>
+
+                        <label class="filter-group">
+                            <span>Pathologie</span>
+                            <div class="custom-select">
+                                <input id="pathologyInput" type="text" placeholder="Toutes les pathologies"
+                                    autocomplete="off">
+                                <ul id="pathologyList" class="dropdown-list"></ul>
+                            </div>
+                        </label>
+
+                        <label class="filter-group">
+                            <span>Localisation</span>
+                            <input id="locationInput" type="text" placeholder="Ville ou code postal">
+                        </label>
+
+                        <label class="filter-check">
+                            <input id="availableOnly" type="checkbox">
+                            <span>Disponibles uniquement</span>
+                        </label>
+
+                        <button class="filter-submit" type="submit">Rechercher</button>
+                        <button class="filter-reset" type="button" id="resetFilters">Réinitialiser les filtres</button>
+                    </form>
+                </aside>
+
+                <section class="doctor-results" id="resultsList">
+                    <p class="no-results">Chargement des professionnels...</p>
+                </section>
+            </div>
+        </section>
     </main>
 
     <!-- Toast -->
@@ -209,9 +556,11 @@
     </aside>
 
     <!-- Scripts -->
-    <script src="../js/main.js"></script>
+    <script src="../js/script.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        const locationInput = document.getElementById("locationInput");
+        const availableOnly = document.getElementById("availableOnly");
         // ---- Gestion du menu mobile & sidebar (identique aux autres pages) ----
         const header = document.getElementById("header");
         const mobileMenu = document.getElementById("mobileMenu");
@@ -234,36 +583,7 @@
         sidebarOverlay?.addEventListener("click", toggleSidebar);
 
         // ---- Gestion de la vue (liste / carte) ----
-        const viewListBtn = document.getElementById("viewList");
-        const viewMapBtn = document.getElementById("viewMap");
         const resultsList = document.getElementById("resultsList");
-        const mapContainer = document.getElementById("mapContainer");
-
-        viewListBtn.addEventListener("click", () => {
-            resultsList.style.display = "block";
-            mapContainer.style.display = "none";
-            viewListBtn.classList.add("active");
-            viewMapBtn.classList.remove("active");
-        });
-
-        viewMapBtn.addEventListener("click", () => {
-            resultsList.style.display = "none";
-            mapContainer.style.display = "block";
-            viewMapBtn.classList.add("active");
-            viewListBtn.classList.remove("active");
-            // Recentrer la carte si nécessaire
-            if (map) map.invalidateSize();
-        });
-
-        // Par défaut, on cache la carte (vue liste)
-        mapContainer.style.display = "none";
-
-        // ---- Initialisation de la carte Leaflet ----
-        let map = L.map('mapContainer').setView([48.3904, -4.4869], 13); // Brest par défaut
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-        let markers = [];
 
         // ---- Recherche (AJAX) ----
         const searchForm = document.getElementById("searchForm");
@@ -276,12 +596,24 @@
         if (urlParams.get('name')) nameInput.value = urlParams.get('name');
         if (urlParams.get('skill')) skillInput.value = urlParams.get('skill');
         if (urlParams.get('pathology')) pathologyInput.value = urlParams.get('pathology');
-        if (nameInput.value || skillInput.value || pathologyInput.value) {
-            performSearch();
-        }
-
-        searchForm.addEventListener("submit", function(e) {
+        performSearch();
+        searchForm.addEventListener("submit", function (e) {
             e.preventDefault();
+            performSearch();
+        });
+
+        const resetFilters = document.getElementById("resetFilters");
+
+        resetFilters.addEventListener("click", () => {
+            nameInput.value = "";
+            skillInput.value = "";
+            pathologyInput.value = "";
+            locationInput.value = "";
+            availableOnly.checked = false;
+
+            document.getElementById("skillsList").style.display = "none";
+            document.getElementById("pathologyList").style.display = "none";
+
             performSearch();
         });
 
@@ -290,12 +622,16 @@
             const skill = skillInput.value.trim();
             const pathology = pathologyInput.value.trim();
 
-            // Nettoyer les marqueurs existants
-            markers.forEach(marker => map.removeLayer(marker));
-            markers = [];
-
             try {
-                let url = `../php/search.php?name=${encodeURIComponent(name)}&skill=${encodeURIComponent(skill)}&pathology=${encodeURIComponent(pathology)}`;
+                const location = locationInput.value.trim();
+                const available = availableOnly.checked ? "1" : "";
+
+                let url =
+                    `../php/recherche.php?name=${encodeURIComponent(name)}` +
+                    `&skill=${encodeURIComponent(skill)}` +
+                    `&pathology=${encodeURIComponent(pathology)}` +
+                    `&location=${encodeURIComponent(location)}` +
+                    `&available=${encodeURIComponent(available)}`;
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("Erreur réseau");
                 const data = await response.json();
@@ -309,44 +645,66 @@
 
         function displayResults(professionals) {
             resultsList.innerHTML = "";
+
+            const resultsCount = document.getElementById("resultsCount");
+
             if (!professionals || professionals.length === 0) {
+                resultsCount.textContent = "0 professionnel trouvé";
                 resultsList.innerHTML = `<p class="no-results">Aucun professionnel trouvé.</p>`;
                 return;
             }
 
-            // Ajouter les cartes de résultats
+            resultsCount.textContent = `${professionals.length} professionnel(s) trouvé(s)`;
+
             professionals.forEach(pro => {
-                const card = document.createElement("div");
+                const displayName =
+                    pro.name ||
+                    `${pro.first_name || ""} ${pro.last_name || ""}`.trim() ||
+                    "Professionnel de santé";
+
+                const initials =
+                    pro.initiales ||
+                    displayName
+                        .split(" ")
+                        .map(word => word.charAt(0))
+                        .join("")
+                        .substring(0, 2)
+                        .toUpperCase();
+
+                const isAvailable = pro.is_available == 1 || pro.is_available === undefined;
+
+                const card = document.createElement("article");
                 card.className = "result-card";
+
                 card.innerHTML = `
-                    <div class="result-avatar">${pro.initiales || pro.name.charAt(0).toUpperCase()}</div>
-                    <div class="result-info">
-                        <h3>${pro.name || pro.username}</h3>
-                        <p>${pro.job_title || "Professionnel de santé"}</p>
-                        <p>${pro.address || ""} ${pro.city || ""}</p>
-                    </div>
-                    <div class="result-distance">${pro.distance ? pro.distance.toFixed(1) + " km" : ""}</div>
-                `;
-                card.addEventListener("click", () => {
-                    // Rediriger vers la fiche (à créer ultérieurement)
-                    window.location.href = `fiche.html?id=${pro.id}`;
-                });
+            <div class="result-avatar">${initials}</div>
+
+            <div class="result-info">
+                <h3>${displayName}</h3>
+                <p class="job">${pro.job_title || "Professionnel de santé"}</p>
+                <p class="address">
+                    ${pro.address || ""} ${pro.postal_code || ""} ${pro.city || ""}
+                </p>
+                <p class="description">${pro.description || ""}</p>
+            </div>
+
+            <div class="result-actions">
+                <span class="status-badge ${isAvailable ? "available" : "unavailable"}">
+                    ${isAvailable ? "Disponible" : "Bientôt disponible"}
+                </span>
+
+                <button class="favorite-btn" type="button">♡</button>
+
+                <a class="details-btn" href="fiche.html?id=${pro.id}">
+                    Voir la fiche
+                </a>
+            </div>
+        `;
+
                 resultsList.appendChild(card);
-
-                // Ajouter un marqueur sur la carte
-                if (pro.latitude && pro.longitude) {
-                    const marker = L.marker([pro.latitude, pro.longitude]).addTo(map);
-                    marker.bindPopup(`<b>${pro.name || pro.username}</b><br>${pro.job_title || ""}`);
-                    markers.push(marker);
-                }
             });
-
-            // Ajuster la vue de la carte pour voir tous les marqueurs
-            if (markers.length > 0) {
-                const group = L.featureGroup(markers);
-                map.fitBounds(group.getBounds().pad(0.1));
-            }
         }
     </script>
 </body>
+
 </html>

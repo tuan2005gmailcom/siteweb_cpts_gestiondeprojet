@@ -9,7 +9,6 @@ async function getSpecialities() {
             .then(response => response.json())
             .then(data => {
                 specialities = data;
-                showSpecialities(specialities);
             })
             .catch(error => {
                 console.error("Erreur chargement spécialités:", error);
@@ -126,7 +125,7 @@ async function getPathologies() {
                         selectedPathologyId = null;
                     }
 
-                    showPathologies(currentPathologies);
+                    pathologyList.style.display = "none";
                 })
                 .catch(error => console.error("Erreur pathologies filtrées:", error));
         }

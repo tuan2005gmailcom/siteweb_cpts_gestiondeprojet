@@ -202,11 +202,29 @@
             event.preventDefault();
 
             const name = nameInput.value.trim();
-            const skill = skillInput.value;
-            const pathology = document.getElementById("pathologyInput").value;
+            const skill = skillInput.value.trim();
+            const pathology = document.getElementById("pathologyInput").value.trim();
 
-            const filters = [name, skill, pathology].filter(Boolean).join(" / ");
-            showToast(filters ? `Recherche : ${filters}` : "Veuillez saisir une recherche");
+            if (!name && !skill && !pathology) {
+                showToast("Veuillez saisir une recherche");
+                return;
+            }
+
+            const params = new URLSearchParams();
+
+            if (name) {
+                params.set("name", name);
+            }
+
+            if (skill) {
+                params.set("skill", skill);
+            }
+
+            if (pathology) {
+                params.set("pathology", pathology);
+            }
+
+            window.location.href = `recherche.html?${params.toString()}`;
         });
 
         chips.forEach((chip) => {

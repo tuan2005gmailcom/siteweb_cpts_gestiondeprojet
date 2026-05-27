@@ -40,7 +40,10 @@ if (!$user) {
     exit;
 }
 
-if (!hash_equals($user["password_hash"], hash("sha256", $password))) {
+$storedHash = trim($user["password_hash"]);
+$inputHash = hash("sha256", $password);
+
+if (!hash_equals($storedHash, $inputHash)) {
     echo json_encode([
         "success" => false,
         "message" => "Mot de passe incorrect."
@@ -63,3 +66,4 @@ echo json_encode([
     "success" => true,
     "message" => "Connexion réussie."
 ]);
+?>

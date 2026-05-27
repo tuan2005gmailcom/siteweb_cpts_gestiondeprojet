@@ -337,6 +337,29 @@ if ($role === "doctor") {
             border-radius: 12px;
             line-height: 1.6;
         }
+
+        .password-toggle-zone {
+            margin-top: 24px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .password-panel {
+            display: none;
+            margin-top: 18px;
+        }
+
+        .password-panel.open {
+            display: block;
+        }
+
+        .password-toggle-btn {
+            border-radius: 12px;
+            padding: 13px 20px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 800;
+        }
     </style>
 </head>
 
@@ -471,6 +494,36 @@ if ($role === "doctor") {
                             </button>
                         </div>
                     </form>
+                    <div class="password-toggle-zone">
+                        <button class="password-toggle-btn" type="button" id="togglePasswordPanel">
+                            Changer le mot de passe
+                        </button>
+
+                        <div class="password-panel" id="passwordPanel">
+                            <form class="profile-form" action="changePassword.php" method="POST">
+                                <label class="profile-field full">
+                                    <span>Ancien mot de passe</span>
+                                    <input type="password" name="old_password" required>
+                                </label>
+
+                                <label class="profile-field">
+                                    <span>Nouveau mot de passe</span>
+                                    <input type="password" name="new_password" required>
+                                </label>
+
+                                <label class="profile-field">
+                                    <span>Confirmer le nouveau mot de passe</span>
+                                    <input type="password" name="confirm_password" required>
+                                </label>
+
+                                <div class="profile-actions">
+                                    <button class="save-profile-btn" type="submit">
+                                        Valider le nouveau mot de passe
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <?php if ($role === "doctor"): ?>
                         <div class="doctor-info-card" id="professional-info">
                             <h2>Profil professionnel</h2>
@@ -555,6 +608,21 @@ if ($role === "doctor") {
         <?php if (isset($_GET["updated"])): ?>
             showToast("Profil mis à jour avec succès");
         <?php endif; ?>
+
+        const togglePasswordPanel = document.getElementById("togglePasswordPanel");
+        const passwordPanel = document.getElementById("passwordPanel");
+
+        if (togglePasswordPanel && passwordPanel) {
+            togglePasswordPanel.addEventListener("click", () => {
+                passwordPanel.classList.toggle("open");
+
+                if (passwordPanel.classList.contains("open")) {
+                    togglePasswordPanel.textContent = "Masquer le changement de mot de passe";
+                } else {
+                    togglePasswordPanel.textContent = "Changer le mot de passe";
+                }
+            });
+        }
     </script>
 </body>
 

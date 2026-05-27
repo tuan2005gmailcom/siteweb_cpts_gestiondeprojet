@@ -18,9 +18,9 @@ function fail($message)
 
 function getCoordinatesFromAddress($address, $city, $postalCode)
 {
-    $fullAddress = trim($address . " " . $postalCode . " " . $city . " France");
+    $fullAddress = trim($address . " " . $postalCode . " " . $city);
 
-    if ($fullAddress === "France") {
+    if ($fullAddress === "") {
         return [
             "success" => false,
             "latitude" => null,
@@ -28,19 +28,9 @@ function getCoordinatesFromAddress($address, $city, $postalCode)
         ];
     }
 
-    $url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=fr&q=" . urlencode($fullAddress);
+    $url = "https://api-adresse.data.gouv.fr/search/?q=" . urlencode($fullAddress) . "&limit=1";
 
-    $ch = curl_init();
-
-    curl_setopt_array($ch, [
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 10,
-        CURLOPT_USERAGENT => "CPTS-Project/1.0"
-    ]);
-
-    $response = curl_exec($ch);
-    curl_close($ch);
+    $response = file_get_contents($url);
 
     if (!$response) {
         return [
@@ -52,7 +42,10 @@ function getCoordinatesFromAddress($address, $city, $postalCode)
 
     $data = json_decode($response, true);
 
-    if (empty($data[0]["lat"]) || empty($data[0]["lon"])) {
+    if (
+        empty($data["features"][0]["geometry"]["coordinates"][0]) ||
+        empty($data["features"][0]["geometry"]["coordinates"][1])
+    ) {
         return [
             "success" => false,
             "latitude" => null,
@@ -62,8 +55,8 @@ function getCoordinatesFromAddress($address, $city, $postalCode)
 
     return [
         "success" => true,
-        "latitude" => $data[0]["lat"],
-        "longitude" => $data[0]["lon"]
+        "longitude" => $data["features"][0]["geometry"]["coordinates"][0],
+        "latitude" => $data["features"][0]["geometry"]["coordinates"][1]
     ];
 }
 
@@ -94,7 +87,7 @@ try {
     $pdo->beginTransaction();
 
     $stmtUser = $pdo->prepare("
-        SELECT id, role
+        SELECT id, role, latitude, longitude
         FROM users
         WHERE id = ?
         LIMIT 1
@@ -123,18 +116,15 @@ try {
         fail("Cet email est déjà utilisé par un autre compte.");
     }
 
-    $coordinates = getCoordinatesFromAddress($address, $city, $postalCode);
+    $latitude = $currentUser["latitude"];
+    $longitude = $currentUser["longitude"];
 
-    $latitude = null;
-    $longitude = null;
+    $coordinates = getCoordinatesFromAddress($address, $city, $postalCode);
 
     if ($coordinates["success"]) {
         $latitude = $coordinates["latitude"];
         $longitude = $coordinates["longitude"];
     }
-
-    $latitude = $coordinates["latitude"];
-    $longitude = $coordinates["longitude"];
 
     $updateUser = $pdo->prepare("
         UPDATE users

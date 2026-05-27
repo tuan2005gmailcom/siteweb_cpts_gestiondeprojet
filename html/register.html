@@ -47,11 +47,16 @@
                     </p>
                 </div>
 
-                <form class="register-form" id="registerForm" action="register.php" method="POST">
+                <form class="register-form" id="registerForm" action="../php/register.php" method="POST">
                     <div class="form-grid">
                         <label class="form-group">
                             <span>Nom d’utilisateur</span>
                             <input type="text" name="username" placeholder="Ex : marie.dupont" required>
+                        </label>
+
+                        <label class="form-group">
+                            <span>Nom complet</span>
+                            <input type="text" name="full_name" placeholder="Ex : Marie Dupont" required>
                         </label>
 
                         <label class="form-group">

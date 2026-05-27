@@ -558,6 +558,13 @@
     <script>
         const locationInput = document.getElementById("locationInput");
         const availableOnly = document.getElementById("availableOnly");
+
+        const sortSelect = document.getElementById("sortSelect");
+
+        sortSelect.addEventListener("change", () => {
+            performSearch();
+        });
+
         // ---- Gestion du menu mobile & sidebar (identique aux autres pages) ----
         const header = document.getElementById("header");
         const mobileMenu = document.getElementById("mobileMenu");
@@ -615,6 +622,7 @@
         });
 
         async function performSearch() {
+            const sort = sortSelect.value;
             const name = nameInput.value.trim();
             const skill = skillInput.value.trim();
             const pathology = pathologyInput.value.trim();
@@ -628,7 +636,8 @@
                     `&skill=${encodeURIComponent(skill)}` +
                     `&pathology=${encodeURIComponent(pathology)}` +
                     `&location=${encodeURIComponent(location)}` +
-                    `&available=${encodeURIComponent(available)}`;
+                    `&available=${encodeURIComponent(available)}` +
+                    `&sort=${encodeURIComponent(sort)}`;
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("Erreur réseau");
                 const data = await response.json();
@@ -673,6 +682,9 @@
                 const card = document.createElement("article");
                 card.className = "result-card";
 
+                const distanceHtml = pro.distance_km !== null && pro.distance_km !== undefined
+                    ? `<span class="result-distance">${Number(pro.distance_km).toFixed(1)} km</span>`
+                    : "";
                 card.innerHTML = `
             <div class="result-avatar">${initials}</div>
 
@@ -686,6 +698,8 @@
             </div>
 
             <div class="result-actions">
+                ${distanceHtml}
+
                 <span class="status-badge ${isAvailable ? "available" : "unavailable"}">
                     ${isAvailable ? "Disponible" : "Bientôt disponible"}
                 </span>

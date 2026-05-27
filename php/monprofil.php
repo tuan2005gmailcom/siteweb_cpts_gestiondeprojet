@@ -344,14 +344,6 @@ if ($role === "doctor") {
     <main class="page">
         <header id="header">
             <div class="header-left">
-                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Ouvrir le menu latéral">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
-
                 <div class="brand">
                     <a href="../html/index.html" class="logo-mark" aria-hidden="true"></a>
                 </div>
@@ -359,7 +351,11 @@ if ($role === "doctor") {
 
             <nav aria-label="Navigation principale">
                 <a href="../html/index.html">Accueil</a>
-                <a href="../html/recherche.html">Recherche</a>
+
+                <?php if ($role !== "doctor"): ?>
+                    <a href="../html/recherche.html">Recherche</a>
+                <?php endif; ?>
+
                 <a href="../html/apropos.html">À propos</a>
                 <a href="../html/contact.html">Contact</a>
             </nav>
@@ -393,8 +389,14 @@ if ($role === "doctor") {
 
                     <div class="profile-menu">
                         <a href="monprofil.php" class="active">Mon profil</a>
-                        <a href="../html/favoris.html">Mes favoris</a>
-                        <a href="../html/rendezvous.html">Mes rendez-vous</a>
+
+                        <?php if ($role === "doctor"): ?>
+                            <a href="#professional-info">Mes informations professionnelles</a>
+                            <a href="../html/rendezvous.html">Mes rendez-vous patients</a>
+                        <?php else: ?>
+                            <a href="../html/favoris.html">Mes favoris</a>
+                            <a href="../html/rendezvous.html">Mes rendez-vous</a>
+                        <?php endif; ?>
                     </div>
                 </aside>
 
@@ -464,7 +466,7 @@ if ($role === "doctor") {
                         </label>
                     </form>
                     <?php if ($role === "doctor"): ?>
-                        <div class="doctor-info-card">
+                        <div class="doctor-info-card" id="professional-info">
                             <h2>Profil professionnel</h2>
 
                             <?php if (!$professional): ?>
@@ -526,25 +528,6 @@ if ($role === "doctor") {
     </main>
 
     <div class="toast" id="toast">Profil</div>
-
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <aside class="app-sidebar" id="appSidebar">
-        <div class="sidebar-header">
-            <div class="brand">
-                <a href="../html/index.html" class="logo-mark" aria-hidden="true" style="width: 120px; height: 30px;"></a>
-            </div>
-            <button class="close-sidebar" id="closeSidebar">&times;</button>
-        </div>
-
-        <a href="monprofil.php" class="nav-item active">Mon profil</a>
-        <a href="../html/favoris.html" class="nav-item">Mes favoris</a>
-        <a href="../html/rendezvous.html" class="nav-item">Mes rendez-vous</a>
-        <a href="logout.php" class="nav-item logout">Déconnexion</a>
-    </aside>
-
-    <script src="../js/main.js"></script>
-
     <script>
         const header = document.getElementById("header");
         const mobileMenu = document.getElementById("mobileMenu");

@@ -170,7 +170,7 @@
                 <a href="apropos.html">À propos</a>
                 <a href="contact.html">Contact</a>
             </nav>
-            <div class="header-actions">
+            <div class="header-actions" id="headerActions" style="visibility: hidden;">
                 <a href="login.html" class="btn-outline">Se connecter</a>
                 <a href="register.html" class="btn-primary">S’inscrire</a>
             </div>
@@ -213,124 +213,118 @@
     <script>
         // Récupération de l'ID depuis l'URL
         const params = new URLSearchParams(window.location.search);
-        const professionalId = params.get('id');
+        const professionalId = params.get("id");
 
         if (!professionalId) {
-            document.getElementById('ficheContainer').innerHTML = "<p>Aucun professionnel spécifié.</p>";
+            document.getElementById("ficheContainer").innerHTML = "<p>Aucun professionnel spécifié.</p>";
         } else {
             chargerFiche(professionalId);
         }
 
         async function chargerFiche(id) {
             try {
-                const response = await fetch(`../php/get_professional.php?id=${id}`);
-                if (!response.ok) throw new Error("Erreur réseau");
+                const response = await fetch(`../php/get_fiche.php?id=${encodeURIComponent(id)}`);
+
+                if (!response.ok) {
+                    throw new Error("Erreur réseau");
+                }
+
                 const data = await response.json();
-                if (data.error) {
-                    document.getElementById('ficheContainer').innerHTML = `<p>${data.error}</p>`;
+
+                if (!data.success) {
+                    document.getElementById("ficheContainer").innerHTML =
+                        `<p>${data.message || "Professionnel introuvable."}</p>`;
                     return;
                 }
+
                 afficherFiche(data);
-            } catch (err) {
-                console.error(err);
-                document.getElementById('ficheContainer').innerHTML = "<p>Erreur lors du chargement.</p>";
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById("ficheContainer").innerHTML =
+                    "<p>Erreur lors du chargement de la fiche.</p>";
             }
         }
 
         function afficherFiche(data) {
-            const pro = data.professionnel;
-            const initiales = pro.username.charAt(0).toUpperCase();
+            const pro = data.professional;
+            const specialities = data.specialities || [];
+            const pathologies = data.pathologies || [];
 
-            // Restriction des infos personnelles
-            let phoneDisplay = pro.phone || "Non renseigné";
-            let emailDisplay = pro.email || "Non renseigné";
-            let portableDisplay = "";
-            let emailPersoDisplay = "";
+            const displayName =
+                pro.full_name ||
+                `${pro.first_name || ""} ${pro.last_name || ""}`.trim() ||
+                "Professionnel de santé";
 
-            if (pro.portable_perso && (!pro.restreindre_infos || data.is_medecin)) {
-                portableDisplay = `<p>📱 Portable personnel : ${pro.portable_perso}</p>`;
-            }
-            if (pro.email_perso && (!pro.restreindre_infos || data.is_medecin)) {
-                emailPersoDisplay = `<p>📧 Email personnel : ${pro.email_perso}</p>`;
-            }
+            const initiales = displayName
+                .split(" ")
+                .map(word => word.charAt(0))
+                .join("")
+                .substring(0, 2)
+                .toUpperCase();
 
-            let html = `
-                <div class="fiche-header">
-                    <div class="avatar-large">${initiales}</div>
-                    <div class="fiche-title">
-                        <h1>${pro.username}</h1>
-                        <p>${pro.job_title || "Professionnel de santé"}</p>
-                        <p>${pro.address} ${pro.city} ${pro.postal_code}</p>
-                    </div>
-                </div>
+            const isAvailable = pro.is_available == 1;
 
-                <div class="fiche-section">
-                    <h2>Coordonnées</h2>
-                    <div class="info-grid">
-                        <p>📞 Téléphone pro : ${phoneDisplay}</p>
-                        <p>✉️ Email pro : ${emailDisplay}</p>
-                        ${portableDisplay}
-                        ${emailPersoDisplay}
-                    </div>
-                </div>
+            const html = `
+        <div class="fiche-header">
+            <div class="avatar-large">${initiales}</div>
 
-                <div class="fiche-section">
-                    <h2>Compétences</h2>
-                    <div>${data.competences.map(c => `<span class="tag">${c.name}</span>`).join(' ') || "Aucune"}</div>
-                </div>
+            <div class="fiche-title">
+                <h1>${displayName}</h1>
+                <p>${pro.job_title || "Professionnel de santé"}</p>
+                <p>${pro.address || ""} ${pro.postal_code || ""} ${pro.city || ""}</p>
+                <p>
+                    <strong>${isAvailable ? "Disponible" : "Bientôt disponible"}</strong>
+                </p>
+            </div>
+        </div>
 
-                <div class="fiche-section">
-                    <h2>Pathologies associées</h2>
-                    <div>${data.pathologies.map(p => `<span class="tag">${p.name}</span>`).join(' ') || "Aucune"}</div>
-                </div>
+        <div class="fiche-section">
+            <h2>Coordonnées</h2>
 
-                <div class="fiche-section">
-                    <h2>Liens utiles</h2>
-                    <ul>
-                        ${data.liens_utiles.map(l => `<li><a href="${l.url}" target="_blank">${l.titre}</a> (${l.type})</li>`).join('') || "<li>Aucun lien</li>"}
-                    </ul>
-                </div>
+            <div class="info-grid">
+                <p>📞 Téléphone : ${pro.phone || "Non renseigné"}</p>
+                <p>✉️ Email : ${pro.email || "Non renseigné"}</p>
+            </div>
+        </div>
 
-                <div style="margin-top: 20px;">
-                    <button class="btn-favoris" id="btnFavoris" data-id="${pro.id}">⭐ Ajouter aux favoris</button>
-                    <button class="btn-feedback" id="btnFeedback">⚠️ Signaler une info obsolète</button>
-                    <button class="btn-print" onclick="window.print()">🖨️ Imprimer</button>
-                </div>
-            `;
+        <div class="fiche-section">
+            <h2>Description</h2>
+            <p>${pro.description || "Aucune description renseignée."}</p>
+        </div>
 
-            document.getElementById('ficheContainer').innerHTML = html;
+        <div class="fiche-section">
+            <h2>Compétences</h2>
+            <div>
+                ${specialities.length > 0
+                    ? specialities.map(s => `<span class="tag">${s.name}</span>`).join("")
+                    : "Aucune compétence renseignée."
+                }
+            </div>
+        </div>
 
-            // Gestion des favoris (vérifier si déjà en favori – simplifié)
-            const btnFav = document.getElementById('btnFavoris');
-            btnFav.addEventListener('click', () => {
-                fetch(`../php/toggle_favoris.php?professional_id=${pro.id}`)
-                    .then(r => r.json())
-                    .then(res => {
-                        btnFav.classList.toggle('active', res.is_favorite);
-                        btnFav.textContent = res.is_favorite ? '❤️ Retirer des favoris' : '⭐ Ajouter aux favoris';
-                    });
-            });
+        <div class="fiche-section">
+            <h2>Pathologies prises en charge</h2>
+            <div>
+                ${pathologies.length > 0
+                    ? pathologies.map(p => `<span class="tag">${p.name}</span>`).join("")
+                    : "Aucune pathologie renseignée."
+                }
+            </div>
+        </div>
 
-            // Feedback modal
-            const feedbackBtn = document.getElementById('btnFeedback');
-            const modal = document.getElementById('feedbackModal');
-            feedbackBtn.addEventListener('click', () => modal.classList.add('open'));
-            document.getElementById('closeFeedbackModal').addEventListener('click', () => modal.classList.remove('open'));
-            document.getElementById('feedbackForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const type = document.getElementById('feedbackType').value;
-                const msg = document.getElementById('feedbackMsg').value;
-                fetch('../php/submit_feedback.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ professional_id: pro.id, type, message: msg })
-                })
-                    .then(r => r.json())
-                    .then(res => {
-                        alert(res.message || "Feedback envoyé !");
-                        modal.classList.remove('open');
-                    });
-            });
+        <div style="margin-top: 20px;">
+            <button class="btn-favoris" id="btnFavoris" data-id="${pro.id}">
+                ⭐ Ajouter aux favoris
+            </button>
+
+            <button class="btn-print" onclick="window.print()">
+                🖨️ Imprimer
+            </button>
+        </div>
+    `;
+
+            document.getElementById("ficheContainer").innerHTML = html;
         }
     </script>
 

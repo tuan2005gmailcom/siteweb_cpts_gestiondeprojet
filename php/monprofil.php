@@ -403,10 +403,10 @@ if ($role === "doctor") {
                 <section class="profile-form-card">
                     <h2>Informations du compte</h2>
 
-                    <form class="profile-form" id="profileForm">
+                    <form class="profile-form" id="profileForm" action="updateProfile.php" method="POST">
                         <label class="profile-field">
                             <span>Nom d’utilisateur</span>
-                            <input type="text" id="username" name="username" value="<?= e($user["username"]) ?>" readonly>
+                            <input type="text" id="username" name="username" value="<?= e($user["username"]) ?>" required>
                         </label>
 
                         <label class="profile-field">
@@ -464,6 +464,12 @@ if ($role === "doctor") {
                                 <option value="other" <?= $user["gender"] === "other" ? "selected" : "" ?>>Autre</option>
                             </select>
                         </label>
+
+                        <div class="profile-actions">
+                            <button class="save-profile-btn" type="submit">
+                                Enregistrer les modifications
+                            </button>
+                        </div>
                     </form>
                     <?php if ($role === "doctor"): ?>
                         <div class="doctor-info-card" id="professional-info">
@@ -545,6 +551,10 @@ if ($role === "doctor") {
             toast.classList.add("show");
             setTimeout(() => toast.classList.remove("show"), 2200);
         }
+
+        <?php if (isset($_GET["updated"])): ?>
+            showToast("Profil mis à jour avec succès");
+        <?php endif; ?>
     </script>
 </body>
 
